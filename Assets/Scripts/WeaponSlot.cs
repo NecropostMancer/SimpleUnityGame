@@ -6,7 +6,7 @@ public class WeaponSlot : MonoBehaviour
 {
 
 
-    private Weapon currentWeapon;
+    public Weapon currentWeapon;
 
 
     //一个问题：加入到这里的东西开始运行后已经实例化了吗？
@@ -15,24 +15,24 @@ public class WeaponSlot : MonoBehaviour
 
     
     private GameObject[] WeaponPool;
+
     // Start is called before the first frame update
     void Start()
     {
         WeaponPool = new GameObject[Weapons.Length];
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     public void Switch(int index)
     {
         index %= Weapons.Length;
         //Destroy(currentWeapon.gameObject);
-        currentWeapon = Weapons[index];
+        //currentWeapon = Weapons[index];
         
         if(transform.childCount != 0)
         {
@@ -42,15 +42,16 @@ public class WeaponSlot : MonoBehaviour
             }
         }
         
-        Instantiate(Weapons[index].gameObject, transform);
+        currentWeapon = Instantiate(Weapons[index].gameObject, transform).GetComponent<Weapon>();
     }
 
-    private void LoadWeapon(int index)
+    private GameObject LoadWeapon(int index)
     {
         if(WeaponPool[index] == null)
         {
             WeaponPool[index] = Weapons[index].gameObject;
         }
+        return WeaponPool[index];
     }
 
 }

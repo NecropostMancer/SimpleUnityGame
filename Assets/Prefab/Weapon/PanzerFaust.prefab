@@ -169,6 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8271715230875148303}
   - component: {fileID: -7323548677494985805}
+  - component: {fileID: -6356668796624544232}
   m_Layer: 0
   m_Name: PanzerFaust
   m_TagString: Untagged
@@ -212,3 +213,22 @@ MonoBehaviour:
   accuracy: 10
   recoil: 10
   fireMode: 0
+--- !u!95 &-6356668796624544232
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8271715230875148301}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 29f771f4b358cbb4eb4ff3b3efd6cd90, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

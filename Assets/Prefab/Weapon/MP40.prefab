@@ -171,6 +171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6654345841160978743}
   - component: {fileID: 3271518366515728853}
+  - component: {fileID: -5571155986273468001}
   m_Layer: 0
   m_Name: MP40
   m_TagString: Untagged
@@ -214,3 +215,22 @@ MonoBehaviour:
   accuracy: 10
   recoil: 10
   fireMode: 1
+--- !u!95 &-5571155986273468001
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9094782623165491590}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0d21ff388191dcf41999ba767fa548d3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

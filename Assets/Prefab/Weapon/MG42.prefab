@@ -171,6 +171,7 @@ GameObject:
   m_Component:
   - component: {fileID: 828523469272266173}
   - component: {fileID: 6470103761899850197}
+  - component: {fileID: 8485069479062468785}
   m_Layer: 0
   m_Name: MG42
   m_TagString: Untagged
@@ -212,5 +213,24 @@ MonoBehaviour:
   shootCd: 5
   damageMult: 1
   accuracy: 0.9
-  recoil: 10
+  recoil: 1
   fireMode: 2
+--- !u!95 &8485069479062468785
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8107588386366369100}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0e21f96cc1f3592448f55a2ac2043962, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

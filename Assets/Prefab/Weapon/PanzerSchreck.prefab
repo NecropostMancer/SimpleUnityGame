@@ -169,6 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2161669831236412198}
   - component: {fileID: -3426259978985745354}
+  - component: {fileID: -5396500712960264051}
   m_Layer: 0
   m_Name: PanzerSchreck
   m_TagString: Untagged
@@ -212,3 +213,22 @@ MonoBehaviour:
   accuracy: 10
   recoil: 10
   fireMode: 0
+--- !u!95 &-5396500712960264051
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8809298374233825947}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 34af09cdb3ed9ab44aef27dbcd3c496d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

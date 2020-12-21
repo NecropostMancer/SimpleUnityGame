@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Camera FirstCamera;
 
+    private float settingCurFov;
 
     bool lockCursor
     {
@@ -64,10 +65,11 @@ public class PlayerController : MonoBehaviour
         if(lockCursor)
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
+        settingCurFov = FirstCamera.fieldOfView;
     }
     Vector2 lastDiag;
     int curIndex = 0;
+    bool canResume = false;
     // Update is called once per frame
     void Update()
     {
@@ -78,6 +80,37 @@ public class PlayerController : MonoBehaviour
         {
             WeaponSwitch(curIndex);
             curIndex++;
+            
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            weaponSlot.currentWeapon.Fire(true);
+            
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            weaponSlot.currentWeapon.Fire(false);
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            weaponSlot.currentWeapon.reload();
+        }
+        if(coroutineRunning == false){
+            if (Input.GetMouseButtonDown(1))
+            {
+                StartCoroutine(AimingOn());
+
+            }
+            else if (Input.GetMouseButtonUp(1))
+            {
+                StartCoroutine(AimingOff());
+                //animator.SetTrigger("AimingOff");
+
+            }
+        }
+        else
+        {
             
         }
         //transform
@@ -103,11 +136,90 @@ public class PlayerController : MonoBehaviour
         
         pivot.Rotate(new Vector3(0f, delta.y, 0f));
         pivot2.Rotate(new Vector3(delta.x, 0f , 0f));
+
+        //do recoil
+        Quaternion str = Quaternion.Euler(0, 0, 0);
+        if(weaponSlot.currentWeapon.GetRecoilStr(out str))
+        {
+            FirstCamera.transform.localRotation = Quaternion.Slerp(FirstCamera.transform.localRotation, str, 0.8f);
+            //FirstCamera.transform.localRotation = str;
+            recoving = true;
+        }
+        
+        else
+        {
+            if (recoving)
+            {
+                FirstCamera.transform.localRotation = Quaternion.Slerp(FirstCamera.transform.localRotation, str, 0.6f);
+                if(FirstCamera.transform.localRotation.eulerAngles.magnitude < 1)
+                {
+                    recoving = false;
+                }
+            }
+        }
+
         
     }
-
+    bool recoving = false;
+    Quaternion str = Quaternion.Euler(0, 0, 0);
     void WeaponSwitch(int index)
     {
         weaponSlot.Switch(index);
+        
+    }
+    
+    private float goalFov = 30.0f;
+
+    private bool coroutineRunning = false;
+    IEnumerator AimingOn()
+    {
+        coroutineRunning = true;
+        //all aiming animations are 4 frames.
+        float curFov = settingCurFov;
+        float step = (curFov - goalFov) / 4; 
+        Animator a = weaponSlot.currentWeapon.gameObject.GetComponent<Animator>();
+        a.SetTrigger("AimingOn");
+        for(int i = 0; i < 4; i++)
+        {
+            
+            yield return null;
+            curFov -= step;
+            FirstCamera.fieldOfView = curFov;
+        }
+        FirstCamera.fieldOfView = goalFov;
+        canResume = true;
+        coroutineRunning = false;
+    }
+   
+
+    IEnumerator AimingOff()
+    {
+        coroutineRunning = true;
+        while (!canResume)
+        {
+            yield return null;
+        }
+        canResume = false;
+        //all aiming animations are 4 frames.
+        float curFov = settingCurFov;
+        float step = (curFov - goalFov) / 4;
+        Animator a = weaponSlot.currentWeapon.gameObject.GetComponent<Animator>();
+        a.ResetTrigger("AimingOn");
+        a.SetTrigger("AimingOff");
+        for (int i = 0; i < 4; i++)
+        {
+
+            yield return null;
+            FirstCamera.fieldOfView = curFov;
+        }
+        FirstCamera.fieldOfView = settingCurFov;
+        coroutineRunning = false;
+
+    }
+
+    // prevent problems after spamming right click. dont know why.
+    private void resetAiming()
+    {
+        
     }
 }
