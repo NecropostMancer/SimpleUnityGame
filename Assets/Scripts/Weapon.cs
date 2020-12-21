@@ -119,6 +119,8 @@ public class Weapon : MonoBehaviour
             }
 
             shooter.shootProjectile();
+            horizontalRecoilStr = Random.Range(-0.5f, 0.5f);
+            verticalRecoilStr = Random.Range(0, 0.1f);
             currentAmmo--;
             curRecoil += recoil;
             center.setcurAmmo(currentAmmo);
@@ -129,6 +131,10 @@ public class Weapon : MonoBehaviour
 
     public void reload()
     {
+        if(currentBackup == 0)
+        {
+            return;
+        }
         isReloading = true;
         GetComponent<Animator>().SetTrigger("Reload");
         
@@ -156,8 +162,7 @@ public class Weapon : MonoBehaviour
     public void Fire(bool a)
     {
         fire = a;
-        horizontalRecoilStr = Random.Range(-0.5f, 0.5f);
-        verticalRecoilStr = Random.Range(0, 0.1f);
+        
     }
 
     private float horizontalRecoilStr;

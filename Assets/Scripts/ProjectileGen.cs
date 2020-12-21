@@ -20,6 +20,24 @@ public class ProjectileGen : MonoBehaviour
     AreaEffect showBulletHitPoint;
     bool active = false;
 
+    private List<ParticleSystem> shootingParticles = new List<ParticleSystem>();
+
+
+    public void Awake()
+    {
+        int cnt = transform.childCount;
+        for (int i = 0; i < cnt; i++)
+        {
+            ParticleSystem ps;
+            ps = transform.GetChild(i).GetComponent<ParticleSystem>();
+            if (ps)
+            {
+                shootingParticles.Add(ps);
+            }
+        }
+    }
+
+
     public void shootProjectile()
     {
         if (!active)
@@ -52,6 +70,7 @@ public class ProjectileGen : MonoBehaviour
                 }
             }
         }
+        EmitParticles(1);
     }
 
 
@@ -68,5 +87,13 @@ public class ProjectileGen : MonoBehaviour
     public void setReady(bool a)
     {
         active = a;
+    }
+
+    private void EmitParticles(int cnt)
+    {
+        foreach(ParticleSystem ps in shootingParticles)
+        {
+            ps.Emit(cnt);
+        }
     }
 }
