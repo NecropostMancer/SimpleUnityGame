@@ -20,6 +20,8 @@ public class WeaponSlot : MonoBehaviour
     void Start()
     {
         WeaponPool = new GameObject[Weapons.Length];
+        if(Weapons.Length != 0)
+        Switch(0);
     }
 
     // Update is called once per frame
@@ -43,6 +45,26 @@ public class WeaponSlot : MonoBehaviour
         }
         
         currentWeapon = Instantiate(Weapons[index].gameObject, transform).GetComponent<Weapon>();
+        SetLayerRecursively(currentWeapon.gameObject, 8);
+    }
+
+    void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        if (null == obj)
+        {
+            return;
+        }
+
+        obj.layer = newLayer;
+
+        foreach (Transform child in obj.transform)
+        {
+            if (null == child)
+            {
+                continue;
+            }
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
 
     private GameObject LoadWeapon(int index)

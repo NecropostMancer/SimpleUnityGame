@@ -15,11 +15,21 @@ public abstract class BaseEnemy : MonoBehaviour
     public enum ArmorType{HEAVY,LIGHT }
     protected ArmorType armorType = ArmorType.LIGHT;
 
+    protected bool flying = false;
 
     protected bool canDoNextAction = true;
 
     //实装自己的ai
     public abstract void doAction();
+
+
+    public void Start()
+    {
+        if (flying)
+        {
+
+        }
+    }
 
     public virtual void Hit(float damage, float str, int damageType)
     {
@@ -36,7 +46,7 @@ public abstract class BaseEnemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void HitToDeath()
+    protected virtual void HitToDeath()
     {
         Destroy(gameObject);
     }

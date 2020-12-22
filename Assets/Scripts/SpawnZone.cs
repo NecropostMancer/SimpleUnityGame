@@ -35,10 +35,14 @@ public class SpawnZone : MonoBehaviour
     SpawnZoneDelegate.drawGizmo drawGizmo;
 
 
-    
+    [SerializeField]
+    private int spawnLimit = 20;
 
     [SerializeField]
     List<GameObject> products;
+
+    private List<GameObject> active;
+
     [SerializeField]
     List<BaseEntityFactory> factories;
     private void Awake()
@@ -48,12 +52,13 @@ public class SpawnZone : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        active = new List<GameObject>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        Clearlist();
         if (CanGen())
         {
             
@@ -83,18 +88,23 @@ public class SpawnZone : MonoBehaviour
             if (Physics.Raycast(transform.position, -Vector3.up,out hitInfo))
             {
                 
-                p.y = hitInfo.point.y;
+                p.y = hitInfo.point.y + 0.05f;
                 
             }
         }
         return p;
     }
-
+    private void Clearlist()
+    {
+        active.RemoveAll(i => i == null);
+    } 
     protected virtual void GenEntity()
     {
+        GameObject go = null;
+        //float heightFix = 
         if (builtInfactory)
         {
-            Instantiate(products[Random.Range(0, products.Count)], Random3DPoint(), new Quaternion());
+            go = Instantiate(products[Random.Range(0, products.Count)], Random3DPoint(), new Quaternion());
         }
         else
         {
@@ -105,15 +115,27 @@ public class SpawnZone : MonoBehaviour
                     GameObject obj = factory.MakeProgress();
                     if (obj)
                     {
-                        Instantiate(obj, Random3DPoint(), new Quaternion());
+                       go = Instantiate(obj, Random3DPoint(), new Quaternion());
+                    }
+                }
+            }
+            else
+            {
+                foreach (BaseEntityFactory factory in factories)
+                {
+                    GameObject obj = factory.GenEntity();
+                    if (obj)
+                    {
+                        go = Instantiate(obj, Random3DPoint(), new Quaternion());
                     }
                 }
             }
         }
+        active.Add(go);
     }
 
     protected virtual bool CanGen()
     {
-        return Random.Range(0, 30) > 27f;
+        return Random.Range(0, 30) > 27f && active.Count < spawnLimit;
     }
 }

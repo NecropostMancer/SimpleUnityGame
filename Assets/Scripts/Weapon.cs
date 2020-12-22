@@ -119,6 +119,7 @@ public class Weapon : MonoBehaviour
             }
 
             shooter.shootProjectile();
+            StartCoroutine(ShootingTriggerCancelNextFrame());
             horizontalRecoilStr = Random.Range(-0.5f, 0.5f);
             verticalRecoilStr = Random.Range(0, 0.1f);
             currentAmmo--;
@@ -127,6 +128,20 @@ public class Weapon : MonoBehaviour
             center.setcurMaga(currentBackup);
             
         }
+    }
+
+    IEnumerator ShootingTriggerCancelNextFrame()
+    {
+        Animator a = GetComponent<Animator>();
+        a.SetTrigger("Shoot");
+        yield return null;
+        a.ResetTrigger("Shoot");
+    }
+
+    public void LateUpdate()
+    {
+        Animator a = GetComponent<Animator>();
+        a.ResetTrigger("Shoot");
     }
 
     public void reload()

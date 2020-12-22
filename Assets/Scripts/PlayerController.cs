@@ -178,7 +178,8 @@ public class PlayerController : MonoBehaviour
         float curFov = settingCurFov;
         float step = (curFov - goalFov) / 4; 
         Animator a = weaponSlot.currentWeapon.gameObject.GetComponent<Animator>();
-        a.SetTrigger("AimingOn");
+        a.SetBool("AimingOff", false);
+        a.SetBool("AimingOn",true);
         for(int i = 0; i < 4; i++)
         {
             
@@ -190,7 +191,12 @@ public class PlayerController : MonoBehaviour
         canResume = true;
         coroutineRunning = false;
     }
-   
+
+    public void LateUpdate()
+    {
+        Debug.Log(weaponSlot.currentWeapon.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Idle"));
+    }
+
 
     IEnumerator AimingOff()
     {
@@ -204,15 +210,17 @@ public class PlayerController : MonoBehaviour
         float curFov = settingCurFov;
         float step = (curFov - goalFov) / 4;
         Animator a = weaponSlot.currentWeapon.gameObject.GetComponent<Animator>();
-        a.ResetTrigger("AimingOn");
-        a.SetTrigger("AimingOff");
+        a.SetBool("AimingOn",false);
+        a.SetBool("AimingOff",true);
         for (int i = 0; i < 4; i++)
         {
 
             yield return null;
+            curFov += step;
             FirstCamera.fieldOfView = curFov;
         }
         FirstCamera.fieldOfView = settingCurFov;
+        
         coroutineRunning = false;
 
     }
