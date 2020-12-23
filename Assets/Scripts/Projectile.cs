@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+
 public abstract class Projectile : MonoBehaviour
 {
     [SerializeField]

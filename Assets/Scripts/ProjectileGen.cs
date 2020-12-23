@@ -35,6 +35,18 @@ public class ProjectileGen : MonoBehaviour
                 shootingParticles.Add(ps);
             }
         }
+        //if missing default values
+        if (projectilePrefab == null)
+        {
+            if (isProjectile)
+            {
+                //projectilePrefab = ((GameObject)Resources.Load("Assets/Prefab/DefaultProj.prefab")).GetComponent<Projectile>();
+            }
+            else
+            {
+                //projectilePrefab = ((GameObject)Resources.Load("Assets/Prefab/DefaultBullet.prefab")).GetComponent<Projectile>();
+            }
+        }
     }
 
 
@@ -44,9 +56,10 @@ public class ProjectileGen : MonoBehaviour
         {
             return;
         }
+        Vector3 dir = (transform.position - aim.position).normalized;
         if (isProjectile)
         {
-            Vector3 dir = (transform.position - aim.position).normalized;
+            
             //strange rotating?
             Projectile a = projectilePrefab.InstantiateProj(transform.position, transform.rotation);
             a.shoot(throwSpeed * dir,curDamageMult*damageMult);
@@ -54,21 +67,8 @@ public class ProjectileGen : MonoBehaviour
         else
         {
             //shoot regular dummy bullet
-            RaycastHit hitInfo;
-            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
-            if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << 9)))
-            {
-
-                if (showBulletHitPoint)
-                {
-                    Instantiate(showBulletHitPoint, hitInfo.point, new Quaternion());
-                }
-                BaseEnemy enemy = hitInfo.collider.gameObject.GetComponent<BaseEnemy>();
-                if (enemy != null)
-                {
-                    enemy.Hit(damageMult * curDamageMult * 20.0f, 1, 0);
-                }
-            }
+            
+            projectilePrefab.InstantiateProj(transform.position, transform.rotation).shoot(throwSpeed * dir, curDamageMult * damageMult);
         }
         EmitParticles(1);
     }

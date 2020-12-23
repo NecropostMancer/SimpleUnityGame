@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
 
     private float settingCurFov;
 
+    public bool infAmmo = false;
+
     bool lockCursor
     {
         set
@@ -68,7 +70,6 @@ public class PlayerController : MonoBehaviour
         settingCurFov = FirstCamera.fieldOfView;
     }
     Vector2 lastDiag;
-    int curIndex = 0;
     bool canResume = false;
     // Update is called once per frame
     void Update()
@@ -76,12 +77,39 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxis("Mouse Y")* Time.deltaTime;
         float vertical = Input.GetAxis("Mouse X") * Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            WeaponSwitch(curIndex);
-            curIndex++;
-            
+            WeaponSwitch(0);
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            WeaponSwitch(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            WeaponSwitch(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            WeaponSwitch(3);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            WeaponSwitch(4);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            WeaponSwitch(5);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            WeaponSwitch(6);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            WeaponSwitch(7);
+        }
+
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -139,6 +167,7 @@ public class PlayerController : MonoBehaviour
 
         //do recoil
         Quaternion str = Quaternion.Euler(0, 0, 0);
+        
         if(weaponSlot.currentWeapon.GetRecoilStr(out str))
         {
             FirstCamera.transform.localRotation = Quaternion.Slerp(FirstCamera.transform.localRotation, str, 0.8f);
@@ -157,7 +186,36 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        
+        /*
+        if (weaponSlot.currentWeapon.GetRecoilStr(out str))
+        {
+            FirstCamera.transform.localRotation = str;
+            //FirstCamera.transform.localRotation = str;
+            recoving = true;
+        }
 
+        else
+        {
+            if (recoving)
+            {
+                FirstCamera.transform.localRotation = str;
+                if (FirstCamera.transform.localRotation.eulerAngles.magnitude < 1)
+                {
+                    recoving = false;
+                }
+            }
+        }
+        */
+        //debug
+        if (infAmmo)
+        {
+            weaponSlot.currentWeapon.infAmmo = true;
+        }
+        else
+        {
+            weaponSlot.currentWeapon.infAmmo = false;
+        }
         
     }
     bool recoving = false;
@@ -194,9 +252,13 @@ public class PlayerController : MonoBehaviour
 
     public void LateUpdate()
     {
-        Debug.Log(weaponSlot.currentWeapon.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Idle"));
+        //Debug.Log(weaponSlot.currentWeapon.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(1).IsName("Idle"));
     }
 
+    public void OnGUI()
+    {
+        
+    }
 
     IEnumerator AimingOff()
     {

@@ -1449,6 +1449,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRoot
       objectReference: {fileID: 0}
+    - target: {fileID: 77148020102839870, guid: 534b5dbe572765841a51ab5d9b896f7f,
+        type: 3}
+      propertyPath: infAmmo
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 77148020102839871, guid: 534b5dbe572765841a51ab5d9b896f7f,
         type: 3}
       propertyPath: m_RootOrder
