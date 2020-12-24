@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //没东西
-public class ObjectPool: MonoBehaviour
+public abstract class GameObjectPool
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    protected List<GameObject> reserve = new List<GameObject>();
 
     
+
+
+    public abstract GameObject Instantiate();
+    public abstract void Destory();
+
+    private void NewObject()
+    {
+
+    }
+
+    private void ShrinkReserveList() //when?
+    {
+        lock (reserve)
+        {
+
+        }
+    }
 }
