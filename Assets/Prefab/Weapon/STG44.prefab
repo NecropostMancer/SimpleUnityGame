@@ -132,9 +132,17 @@ MonoBehaviour:
   backupMagazine: 4
   shootCd: 5
   damageMult: 1
-  accuracy: 10
+  accuracy: 0.785
   recoil: 10
+  curRecoil: 0
+  maxRecoilBeforeStop: 0
+  currentAcc: 1
+  infAmmo: 0
   fireMode: 1
+  curRecoilVector: {x: 0, y: 0}
+  maxRecoilVector: {x: 0, y: 0}
+  recoveryStep: 0
+  recoveryVector: {x: 0, y: 0}
 --- !u!95 &-5027686874406763956
 Animator:
   serializedVersion: 3

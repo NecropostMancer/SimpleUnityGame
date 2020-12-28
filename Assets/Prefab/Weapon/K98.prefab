@@ -14309,7 +14309,7 @@ MonoBehaviour:
   backupMagazine: 5
   shootCd: 40
   damageMult: 2.2
-  accuracy: 10
+  accuracy: 0.9
   recoil: 10
   curRecoil: 0
   maxRecoilBeforeStop: 0
