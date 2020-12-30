@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyObjectPool<T> : GameObjectPool where T : BaseEnemy, new()
 {
-    private BaseEnemy enemy = new T();
+    private readonly BaseEnemy enemy = new T();
     public override GameObject Get()
     {
         if(_objects.Count == 0)
@@ -14,8 +14,8 @@ public class EnemyObjectPool<T> : GameObjectPool where T : BaseEnemy, new()
         }
         else
         {
-            GameObject go;
-            _objects.TryTake(out go);
+            
+            _objects.TryTake(out GameObject go);
             return go;
         }
     }
@@ -30,7 +30,7 @@ public class EnemyObjectPool<T> : GameObjectPool where T : BaseEnemy, new()
         _objects.Add(item);
     }
 
-    private void NewObject()
+    protected override void NewObject()
     {
 
     }

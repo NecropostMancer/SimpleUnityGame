@@ -23,7 +23,7 @@ public class EnemySoldier : BaseEnemy
 
     private float maxSpeed = 10.0f;
 
-    public override void doAction()
+    public override void DoAction()
     {
         if (closeEnough && !safe)
         {
@@ -56,7 +56,7 @@ public class EnemySoldier : BaseEnemy
     }
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
         base.Start();
         animator = GetComponent<Animator>();
@@ -78,18 +78,18 @@ public class EnemySoldier : BaseEnemy
         if (canDoNextAction)
         {
             canDoNextAction = false;
-            StartCoroutine(doActionRandomDelay());
+            StartCoroutine(DoActionRandomDelay());
             
         }
     }
 
-    IEnumerator doActionRandomDelay()
+    IEnumerator DoActionRandomDelay()
     {
         for(int i = 0; i < (int)Random.Range(200, 600); i++)
         {
             yield return null;
         }
-        doAction();
+        DoAction();
     }
 
     private void Shoot()
@@ -145,7 +145,7 @@ public class EnemySoldier : BaseEnemy
         canDoNextAction = true;
     }
 
-    public void getNewLeader(EnemySoldier leader)
+    public void GetNewLeader(EnemySoldier leader)
     {
         myLeader = leader;
     }
@@ -181,10 +181,19 @@ public class EnemySoldier : BaseEnemy
         StopAllCoroutines();
         canDoNextAction = false;
         animator.SetTrigger("Killed");
-        StartCoroutine(clear());
+        //ragdoll.
+        Rigidbody[] bodies = GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody rb in bodies)
+        {
+            //rb.maxDepenetrationVelocity = 0.1f;
+            rb.isKinematic = false;
+            
+        }
+        animator.enabled = false;
+        StartCoroutine(Clear());
     }
 
-    IEnumerator clear()
+    IEnumerator Clear()
     {
         yield return new WaitForSeconds(7);
         base.HitToDeath();

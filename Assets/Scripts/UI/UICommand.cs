@@ -7,5 +7,6 @@ using System.Threading.Tasks;
 public abstract class UICommand
 {
     //public abstract string TargetName();
+    //由nameof代劳。
 }
 

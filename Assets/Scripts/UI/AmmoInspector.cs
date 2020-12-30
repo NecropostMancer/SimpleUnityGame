@@ -10,6 +10,7 @@ public class AmmoInspector : MonoBehaviour
     private Text maxAmmo;
 
     // Start is called before the first frame update
+    // 依赖于prefab的层级结构。
     void Start()
     {
         curAmmo = transform.GetChild(0).GetComponent<Text>();
@@ -24,17 +25,17 @@ public class AmmoInspector : MonoBehaviour
     }
 
 
-    public void setcurAmmo(int a)
+    public void SetcurAmmo(int a)
     {
         curAmmo.text = a.ToString();
     }
 
-    public void setcurMaga(int a)
+    public void SetcurMaga(int a)
     {
         curMaga.text = a.ToString();
     }
 
-    public void setmaxAmmo(int a)
+    public void SetmaxAmmo(int a)
     {
         maxAmmo.text = a.ToString();
     }

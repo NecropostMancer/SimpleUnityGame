@@ -16,16 +16,6 @@ public static class AreaEffectFactory
 
     public static AreaEffect GetEffectInstance(EffectType ef)
     {
-        switch (ef)
-        {
-            case EffectType.A:
-                return new AreaEffect();
-            case EffectType.B:
-                return new AreaEffect();
-            case EffectType.C:
-                return new AreaEffect();
-            default:
-                return new AreaEffect();
-        }
+        return new AreaEffect();
     }
 }

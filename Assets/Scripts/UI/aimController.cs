@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class aimController : MonoBehaviour
+public class AimController : MonoBehaviour
 {
-
+    // 依赖于prefab的层级结构。
     private RectTransform[] aim = new RectTransform[4];
 
     private bool _hit = false;
@@ -53,7 +53,7 @@ public class aimController : MonoBehaviour
         }
     }
 
-    public void expand(float str)
+    public void Expand(float str)
     {
         str *= 30;
         aim[0].anchoredPosition = new Vector3(0, str, 0);

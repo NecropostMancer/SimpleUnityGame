@@ -11,5 +11,5 @@ public static class SpawnZoneDelegate
 {
     public delegate Vector3 getRandomPointGenerator( bool onSurface);
     public delegate void drawGizmo();
-    public enum type { SPHERE, CIRCLE, CUBE, RECT };
+    public enum Type { SPHERE, CIRCLE, CUBE, RECT };
 }

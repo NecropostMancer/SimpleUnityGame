@@ -9,8 +9,8 @@ public class BattleManager : Singleton<BattleManager>
     //private List<BaseEnemy> enemyRef = new List<BaseEnemy>();
     //private List<SpawnZone> spawnRef = new List<SpawnZone>();
 
-    private Dictionary<int, BaseEnemy> enemyRef = new Dictionary<int, BaseEnemy>();
-    private Dictionary<int, SpawnZone> spawnRef = new Dictionary<int, SpawnZone>();
+    private readonly Dictionary<int, BaseEnemy> enemyRef = new Dictionary<int, BaseEnemy>();
+    private readonly Dictionary<int, SpawnZone> spawnRef = new Dictionary<int, SpawnZone>();
 
     private GameUIManager gameUIManager;
     //private AssetsLoadSystem Loader;
@@ -19,6 +19,8 @@ public class BattleManager : Singleton<BattleManager>
     private bool Busy = false;
 
     private bool win = false;
+
+    private int score = 0;
 
     public void AddUnitReference(BaseEnemy baseEnemy)
     {
@@ -33,6 +35,12 @@ public class BattleManager : Singleton<BattleManager>
     public void RemoveUnitReference(BaseEnemy baseEnemy)
     {
         enemyRef.Remove(baseEnemy.GetInstanceID());
+        score++;
+        Debug.Log(score);
+        if(score > 20)
+        {
+            Win();
+        }
     }
 
     public void RemoveUnitReference(int index)
@@ -65,7 +73,7 @@ public class BattleManager : Singleton<BattleManager>
 
     void Win()
     {
-
+        gameUIManager.InvokeSceneManager(0);
     }
 
     void Fail()
@@ -81,7 +89,7 @@ public class BattleManager : Singleton<BattleManager>
 
     public void SendUICommand(UICommand cmd)
     {
-        gameUIManager.inform(cmd);
+        gameUIManager.Inform(cmd);
     }
 
     // Update is called once per frame

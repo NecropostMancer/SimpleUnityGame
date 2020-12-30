@@ -16,13 +16,15 @@ OnDrawGizmo，如果在SpawnZone中直接写，那么SpawnZone又
 
 将来需要改造成支持预先设计好的生成队列，打算写一个解释器
 读入预先的json来解决这个问题。
+
+好的我们现在有AssetsLoader了。
  */
 public class SpawnZone : MonoBehaviour
 {
     
     
     [SerializeField]
-    SpawnZoneDelegate.type areaType;
+    SpawnZoneDelegate.Type areaType;
     [SerializeField]
     bool snapGround = false;
     [SerializeField]
@@ -83,9 +85,7 @@ public class SpawnZone : MonoBehaviour
         Vector3 p = transform.TransformPoint(generator(onSurface));
         if (snapGround)
         {
-            
-            RaycastHit hitInfo;
-            if (Physics.Raycast(transform.position, -Vector3.up,out hitInfo))
+            if (Physics.Raycast(transform.position, -Vector3.up,out RaycastHit hitInfo))
             {
                 
                 p.y = hitInfo.point.y + 0.05f;

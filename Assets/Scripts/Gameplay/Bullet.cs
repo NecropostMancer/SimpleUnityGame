@@ -9,12 +9,15 @@ public class Bullet : Projectile
 
     private static Bullet instance;
     //private static ParticleSystem instanceP;
-    public override void shoot(Vector3 speed,float str)
+    public override void Shoot(Vector3 acc,float str)
     {
-        RaycastHit hitInfo;
-        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
+        float maxBias = 100;
+        float randx = Random.Range(-1, 1) * (1 - acc.x);
+        float randy = Random.Range(-1, 1) * (1 - acc.x);
+        
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2 + maxBias * randx, Screen.height / 2 + maxBias * randy, Camera.main.nearClipPlane));
         //if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << 9)))
-        if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
         {
 
 

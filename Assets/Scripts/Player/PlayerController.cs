@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            weaponSlot.currentWeapon.reload();
+            weaponSlot.currentWeapon.Reload();
         }
         if(coroutineRunning == false){
             if (Input.GetMouseButtonDown(1))
@@ -166,9 +166,8 @@ public class PlayerController : MonoBehaviour
         pivot2.Rotate(new Vector3(delta.x, 0f , 0f));
 
         //do recoil
-        Quaternion str = Quaternion.Euler(0, 0, 0);
         
-        if(weaponSlot.currentWeapon.GetRecoilStr(out str))
+        if(weaponSlot.currentWeapon.GetRecoilStr(out Quaternion str))
         {
             FirstCamera.transform.localRotation = Quaternion.Slerp(FirstCamera.transform.localRotation, str, 0.8f);
             //FirstCamera.transform.localRotation = str;
@@ -288,7 +287,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // prevent problems after spamming right click. dont know why.
-    private void resetAiming()
+    private void ResetAiming()
     {
         
     }

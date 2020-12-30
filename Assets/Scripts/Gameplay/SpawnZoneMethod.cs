@@ -4,20 +4,20 @@ using UnityEngine;
 
 public static class SpawnZoneMethod
 {
-    public static SpawnZoneDelegate.getRandomPointGenerator NewGenerator(SpawnZoneDelegate.type type)
+    public static SpawnZoneDelegate.getRandomPointGenerator NewGenerator(SpawnZoneDelegate.Type type)
     {
         switch (type)
         {
-            case SpawnZoneDelegate.type.SPHERE:
+            case SpawnZoneDelegate.Type.SPHERE:
                 return Type1;
                 break;
-            case SpawnZoneDelegate.type.CIRCLE:
+            case SpawnZoneDelegate.Type.CIRCLE:
                 return Type2;
                 break;
-            case SpawnZoneDelegate.type.CUBE:
+            case SpawnZoneDelegate.Type.CUBE:
                 return Type3;
                 break;
-            case SpawnZoneDelegate.type.RECT:
+            case SpawnZoneDelegate.Type.RECT:
                 return Type4;
                 break;
             default:

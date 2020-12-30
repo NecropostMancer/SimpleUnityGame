@@ -9,7 +9,7 @@ public class WeaponSlot : MonoBehaviour
     public Weapon currentWeapon;
 
 
-    //一个问题：加入到这里的东西开始运行后已经实例化了吗？
+    
     [SerializeField]
     private Weapon[] Weapons;
 
@@ -45,10 +45,10 @@ public class WeaponSlot : MonoBehaviour
         }
         
         currentWeapon = Instantiate(Weapons[index].gameObject, transform).GetComponent<Weapon>();
-        SetLayerRecursively(currentWeapon.gameObject, 8);
+        SetLayerRecursively(currentWeapon.gameObject, 8);//第一人称摄像机用，专拍武器，防止穿模
     }
 
-    void SetLayerRecursively(GameObject obj, int newLayer)
+    private void SetLayerRecursively(GameObject obj, int newLayer)
     {
         if (null == obj)
         {

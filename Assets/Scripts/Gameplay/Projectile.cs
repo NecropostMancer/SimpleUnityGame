@@ -16,12 +16,12 @@ public abstract class Projectile : MonoBehaviour
         return Instantiate(gameObject, at, q).GetComponent<Projectile>();
     }
 
-    public virtual float getDamage()
+    public virtual float GetDamage()
     {
         return damage;
     }
 
-    public abstract void shoot(Vector3 speed,float damageMult);
+    public abstract void Shoot(Vector3 speed,float damageMult);
 
 
 }

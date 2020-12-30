@@ -5,6 +5,8 @@ using UnityEngine;
 /*
  为什么有这个类：
 炸弹和炸弹爆炸毕竟不是一个事情。
+
+TODO: 把粒子安上去.
  */
 public class AreaEffect : MonoBehaviour
 {
@@ -91,12 +93,12 @@ public class AreaEffect : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void setDamageMult(float a)
+    public void SetDamageMult(float a)
     {
         damageMult = a;
     }
 
-    public void setDamage(float a)
+    public void SetDamage(float a)
     {
         damage = a;
     }

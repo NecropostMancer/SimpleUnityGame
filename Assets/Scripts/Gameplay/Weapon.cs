@@ -32,7 +32,8 @@ public class Weapon : MonoBehaviour
     bool fire = false;
     bool isReloading = false;
     int totalShoot = 0;
-    
+
+    bool isAiming = false;
 
     //debug
     public bool infAmmo = false;
@@ -47,8 +48,9 @@ public class Weapon : MonoBehaviour
     private Transform shellThrowRelAt;
     private GameObject shell;
 
-    private AmmoCommand command = new AmmoCommand();
-    private AimCommand aimCommand = new AimCommand();
+    private readonly AmmoCommand command = new AmmoCommand();
+    private readonly AimCommand aimCommand = new AimCommand();
+    // 依赖于prefab的层级结构。
     // Start is called before the first frame update
     void Start()
     {
@@ -61,8 +63,8 @@ public class Weapon : MonoBehaviour
         currentAcc = accuracy;
         currentCd = shootCd;
         shooter = transform.GetChild(1).GetComponent<ProjectileGen>();
-        shooter.setDamageBuff(damageMult);
-        shooter.setReady(true);
+        shooter.SetDamageBuff(damageMult);
+        shooter.SetReady(true);
 
         
 
@@ -87,7 +89,7 @@ public class Weapon : MonoBehaviour
     {
         if (curRecoil > 0.01)
         {
-            if (fire == false)
+            if (!fire)
             {
                 sinceStop++;
                 curRecoil -= recoveryStep;
@@ -131,7 +133,7 @@ public class Weapon : MonoBehaviour
         {
             if(currentAmmo == 0)
             {
-                reload();
+                Reload();
                 fire = false;
                 return;
             }
@@ -169,7 +171,7 @@ public class Weapon : MonoBehaviour
                 currentCd = 0;
             }
 
-            shooter.shootProjectile();
+            shooter.ShootProjectile(isAiming? 1f : accuracy / ((curRecoil + 30) / 30)); //目前和屏幕上的准星大小不匹配。
             StartCoroutine(ShootingTriggerCancelNextFrame());
             horizontalRecoilStr = Random.Range(-0.5f, 0.5f);
             verticalRecoilStr = Random.Range(0, 0.1f);
@@ -200,7 +202,7 @@ public class Weapon : MonoBehaviour
         a.ResetTrigger("Shoot");
     }
 
-    public void reload()
+    public void Reload()
     {
         if(currentBackup == 0)
         {
@@ -211,6 +213,7 @@ public class Weapon : MonoBehaviour
         
     }
 
+    //animation event callback
     public void ReloadingAnimationDone()
     {
         if (currentBackup != 0)
@@ -228,7 +231,7 @@ public class Weapon : MonoBehaviour
     public void ReloadingSoundPlay()
     {
         GetComponent<Animator>().ResetTrigger("Reload"); //prevent potential animation redundent
-        //play sound
+        //play sound here
     }
 
     public void Fire(bool a)
@@ -243,7 +246,7 @@ public class Weapon : MonoBehaviour
     private Vector2 curRecoilVector;
     [SerializeField]
     private Vector2 maxRecoilVector;
-    private float recovery = 0.5f; // how many secs for full back; 
+    private readonly float recovery = 0.5f; // how many secs for full back; 
     [SerializeField]
     private float recoveryStep = 0.0f;
     [SerializeField]

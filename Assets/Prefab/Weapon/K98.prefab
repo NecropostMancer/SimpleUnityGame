@@ -14308,7 +14308,7 @@ MonoBehaviour:
   magazineSize: 5
   backupMagazine: 5
   shootCd: 40
-  damageMult: 2.2
+  damageMult: 10
   accuracy: 0.9
   recoil: 10
   curRecoil: 0

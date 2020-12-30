@@ -11,7 +11,7 @@ public class BattleUIBundle : UIBundle
     private GameObject ammoInspector;
     private AmmoInspector ammoInspectorRef; 
     private GameObject aim;
-    private aimController aimRef;
+    private AimController aimRef;
 
     private int curAmmo;
     private int maxAmmo;
@@ -22,10 +22,10 @@ public class BattleUIBundle : UIBundle
         switch (command.GetType().Name)//oh.
         {
             case nameof(AmmoCommand):
-                ammoChange(command);
+                AmmoChange(command);
                 break;
             case nameof(AimCommand):
-                aimChange(command);
+                AimChange(command);
                 break;
             default:
                 break;
@@ -40,40 +40,40 @@ public class BattleUIBundle : UIBundle
         ammoInspector = this.transform.Find("ammoInspector").gameObject;
         ammoInspectorRef = ammoInspector.GetComponent<AmmoInspector>();
         aim = this.transform.Find("aim").gameObject;
-        aimRef = aim.GetComponent<aimController>();
+        aimRef = aim.GetComponent<AimController>();
     }
 
-    void aimChange(UICommand command)
+    void AimChange(UICommand command)
     {
         AimCommand cmd = command as AimCommand;
         
-        aimRef.expand(cmd.str);
+        aimRef.Expand(cmd.str);
         
     }
 
-    void ammoChange(UICommand command)
+    void AmmoChange(UICommand command)
     {
         AmmoCommand cmd = command as AmmoCommand;
         
         if (cmd.shot)
         {
             curAmmo--;
-            ammoInspectorRef.setcurAmmo(curAmmo);
+            ammoInspectorRef.SetcurAmmo(curAmmo);
 
         }else if (cmd.reload)
         {
             curAmmo = maxAmmo;
             maxMaga--;
-            ammoInspectorRef.setcurAmmo(curAmmo);
-            ammoInspectorRef.setcurMaga(maxMaga);
+            ammoInspectorRef.SetcurAmmo(curAmmo);
+            ammoInspectorRef.SetcurMaga(maxMaga);
         }
         else if(cmd.reset)
         {
             curAmmo = maxAmmo = cmd.maxAmmo;
             maxMaga = cmd.maxMaga;
-            ammoInspectorRef.setcurAmmo(curAmmo);
-            ammoInspectorRef.setcurMaga(maxMaga);
-            ammoInspectorRef.setmaxAmmo(maxAmmo);
+            ammoInspectorRef.SetcurAmmo(curAmmo);
+            ammoInspectorRef.SetcurMaga(maxMaga);
+            ammoInspectorRef.SetmaxAmmo(maxAmmo);
         }
         
     }

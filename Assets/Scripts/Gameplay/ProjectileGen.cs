@@ -20,7 +20,7 @@ public class ProjectileGen : MonoBehaviour
     AreaEffect showBulletHitPoint;
     bool active = false;
 
-    private List<ParticleSystem> shootingParticles = new List<ParticleSystem>();
+    private readonly List<ParticleSystem> shootingParticles = new List<ParticleSystem>();
 
 
     public void Awake()
@@ -50,7 +50,7 @@ public class ProjectileGen : MonoBehaviour
     }
 
 
-    public void shootProjectile()
+    public void ShootProjectile(float accuracy)
     {
         if (!active)
         {
@@ -62,29 +62,29 @@ public class ProjectileGen : MonoBehaviour
             
             //strange rotating?
             Projectile a = projectilePrefab.InstantiateProj(transform.position, transform.rotation);
-            a.shoot(throwSpeed * dir,curDamageMult*damageMult);
+            a.Shoot(throwSpeed * dir,curDamageMult*damageMult);
         }
         else
         {
             //shoot regular dummy bullet
             
-            projectilePrefab.InstantiateProj(transform.position, transform.rotation).shoot(throwSpeed * dir, curDamageMult * damageMult);
+            projectilePrefab.InstantiateProj(transform.position, transform.rotation).Shoot(new Vector3(accuracy,0,0), curDamageMult * damageMult);
         }
         EmitParticles(1);
     }
 
 
-    public void setDamageBuff(float a)
+    public void SetDamageBuff(float a)
     {
         curDamageMult = a;
     }
 
-    private float getTotalDamageBuff()
+    private float GetTotalDamageBuff()
     {
         return curDamageMult * damageMult;
     }
     
-    public void setReady(bool a)
+    public void SetReady(bool a)
     {
         active = a;
     }

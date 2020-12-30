@@ -14,8 +14,7 @@ public abstract class GameObjectPool
 
     virtual public GameObject Get()
     {
-        GameObject re;
-        _objects.TryTake(out re);
+        _objects.TryTake(out GameObject re);
         return re;
     }
 

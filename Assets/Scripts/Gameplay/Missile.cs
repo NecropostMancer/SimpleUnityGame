@@ -41,15 +41,15 @@ public class Missile : Projectile
         if (effect)
         {
             AreaEffect _ = Instantiate(effect, transform.position, new Quaternion());
-            _.setDamage(getDamage());
+            _.SetDamage(GetDamage());
         }
 
         Destroy(gameObject);
     }
 
-    public override void shoot(Vector3 speed,float damageMult)
+    public override void Shoot(Vector3 speed,float damageMult)
     {
         rb.velocity = speed;
-        damage = damage * damageMult;
+        damage *= damageMult;
     }
 }

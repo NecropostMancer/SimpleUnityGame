@@ -24,7 +24,7 @@ public abstract class BaseEnemy : MonoBehaviour
     
 
     //实装自己的ai
-    public abstract void doAction();
+    public abstract void DoAction();
 
 
     public void Start()
