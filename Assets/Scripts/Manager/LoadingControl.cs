@@ -26,7 +26,7 @@ public class LoadingControl : MonoBehaviour
         }
     }
 
-    public void StartFadeOut(GameSceneManager refer)
+    public void StartFadeOut(GameAssetsManager refer)
     {
         Fade.SetActive(true);
         sceneCamera.depth = -100;
@@ -36,7 +36,7 @@ public class LoadingControl : MonoBehaviour
 
     }
 
-    IEnumerator FadeOutE(GameSceneManager refer)
+    IEnumerator FadeOutE(GameAssetsManager refer)
     {
         //GameObject go = canvas.transform.GetChild(0).gameObject;
         Image image = Fade.transform.GetChild(0).GetComponent<Image>();

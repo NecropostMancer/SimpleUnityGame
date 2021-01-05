@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//deprecated
+[System.Obsolete("using prototype for enemygen instead.")]
 public class RandomEntityFactory : BaseEntityFactory
 {
     

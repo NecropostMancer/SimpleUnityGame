@@ -7,7 +7,7 @@ public class GameUIManager : Singleton<GameUIManager>
     //????
     WeakReference<UIBundle> bundle;
 
-    GameSceneManager gameSceneManager; //尽量让同一级之间互通.
+    GameAssetsManager gameSceneManager; //尽量让同一级之间互通.
 
     //操控当前的UIBundle，一个场景只能有一个Bundle，
     //编辑时保证只有一个Bundle存在于一个Scene中，
@@ -26,6 +26,14 @@ public class GameUIManager : Singleton<GameUIManager>
         if(type == 0)
         {
             gameSceneManager.LoadMainMenu(Callback);
+        }
+        else if(type == -1)
+        {
+            gameSceneManager.LoadSelection(Callback);
+        }
+        else if(type == -2)
+        {
+            gameSceneManager.LoadStore(Callback);
         }
         else
         {
@@ -85,7 +93,7 @@ public class GameUIManager : Singleton<GameUIManager>
     // Start is called before the first frame update
     void Start()
     {
-        gameSceneManager = GameSceneManager.instance;
+        gameSceneManager = GameAssetsManager.instance;
     }
 
     // Update is called once per frame

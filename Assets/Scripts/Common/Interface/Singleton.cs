@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Singleton<Instance> : MonoBehaviour where Instance : Singleton<Instance>
 {

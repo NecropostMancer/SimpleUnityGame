@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Weapon : Playable
 {
-    private static BattleManager battleManager;
     [SerializeField]
     private int magazineSize;
     private int currentAmmo;
@@ -45,6 +44,7 @@ public class Weapon : MonoBehaviour
 
     private ProjectileGen shooter;
 
+    private bool throwShell;
     private Transform shellThrowRelAt;
     private GameObject shell;
 
@@ -54,10 +54,6 @@ public class Weapon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (!battleManager)
-        {
-            battleManager = BattleManager.instance;
-        }
         currentAmmo = magazineSize;
         currentBackup = backupMagazine;
         currentAcc = accuracy;
@@ -72,15 +68,24 @@ public class Weapon : MonoBehaviour
         command.reset = true;
         command.maxAmmo = magazineSize;
         command.maxMaga = currentBackup;
-        battleManager.SendUICommand(command);
+        SendUICommand(command);
         command.reset = false;
 
         aimCommand.str = Mathf.Clamp((1f - accuracy) * 10, 1, 10);
-        battleManager.SendUICommand(aimCommand);
+        SendUICommand(aimCommand);
 
-        shellThrowRelAt = transform.GetChild(3).transform;
-        shell = transform.GetChild(4).gameObject;
-        shell.SetActive(false);
+        if (transform.childCount > 4)
+        {
+            throwShell = true;
+            shellThrowRelAt = transform.GetChild(3).transform;
+            shell = transform.GetChild(4).gameObject;
+            shell.SetActive(false);
+        }
+        else
+        {
+            throwShell = false;
+        }
+        
     }
 
     // Update is called once per frame
@@ -105,11 +110,11 @@ public class Weapon : MonoBehaviour
                     curRecoil = 0;
                     maxRecoilVector.x = maxRecoilVector.y = maxRecoilBeforeStop = 0;
                     aimCommand.str = Mathf.Clamp((1f - accuracy) * 10, 1, 10);
-                    battleManager.SendUICommand(aimCommand);
+                    SendUICommand(aimCommand);
                 }
             }
             aimCommand.str = Mathf.Clamp((1f - accuracy) * 10 + curRecoil / (curRecoil + 20) * 10,1,10);
-            battleManager.SendUICommand(aimCommand);
+            SendUICommand(aimCommand);
         }
         else
         {
@@ -117,7 +122,7 @@ public class Weapon : MonoBehaviour
 
         }
     }
-
+    bool shot = false;
     private void FixedUpdate()
     {
        
@@ -135,6 +140,7 @@ public class Weapon : MonoBehaviour
             {
                 Reload();
                 fire = false;
+                ShootingStateExit();
                 return;
             }
             
@@ -145,6 +151,7 @@ public class Weapon : MonoBehaviour
                 if (fireMode != FireMode.AUTO)
                 {
                     fire = false;
+                    ShootingStateExit();
                 }
                 return;
 
@@ -152,6 +159,7 @@ public class Weapon : MonoBehaviour
             if (fireMode == FireMode.SINGLE)
             {
                 fire = false;
+                ShootingStateExit();
                 currentCd = 0;
             }
             else if (fireMode == FireMode.TRIPLE)
@@ -162,6 +170,7 @@ public class Weapon : MonoBehaviour
                 {
                     totalShoot = 0;
                     fire = false;
+                    ShootingStateExit();
                     currentCd = 0;
                 }
                 fire = true;
@@ -169,6 +178,7 @@ public class Weapon : MonoBehaviour
             else if (fireMode == FireMode.AUTO)
             {
                 currentCd = 0;
+                shot = true;
             }
 
             shooter.ShootProjectile(isAiming? 1f : accuracy / ((curRecoil + 30) / 30)); //目前和屏幕上的准星大小不匹配。
@@ -179,12 +189,21 @@ public class Weapon : MonoBehaviour
             {
                 currentAmmo--;
                 command.shot = true;
-                battleManager.SendUICommand(command);
+                SendUICommand(command);
                 command.shot = false;
             }
             ApplyRecoil();
             
             ThrowShell();
+        }
+        if (shot)
+        {
+            if (fire)
+            {
+                return;
+            }
+            shot = false;
+            ShootingStateExit();
         }
     }
 
@@ -194,6 +213,12 @@ public class Weapon : MonoBehaviour
         a.SetTrigger("Shoot");
         yield return null;
         a.ResetTrigger("Shoot");
+    }
+
+    private void ShootingStateExit()
+    {
+        Animator a = GetComponent<Animator>();
+        a.SetTrigger("ShootStop");
     }
 
     public void LateUpdate()
@@ -221,7 +246,7 @@ public class Weapon : MonoBehaviour
             currentAmmo = magazineSize;
             currentBackup--;
             command.reload = true;
-            battleManager.SendUICommand(command);
+            SendUICommand(command);
             command.reload = false;
         }
         isReloading = false;
@@ -285,6 +310,10 @@ public class Weapon : MonoBehaviour
     //todo: obj pool
     private void ThrowShell()
     {
+        if (!throwShell)
+        {
+            return;
+        }
         GameObject newShell = Instantiate(shell,shellThrowRelAt.position ,shell.transform.rotation);
         newShell.GetComponent<Rigidbody>().velocity = shell.transform.rotation * new Vector3(1, 0, 0);
         newShell.SetActive(true);

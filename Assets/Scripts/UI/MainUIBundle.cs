@@ -31,7 +31,8 @@ public class MainUIBundle : UIBundle
     void Start()
     {
         transform.GetChild(1).GetComponent<Button>().onClick.AddListener(LoadScene);
-        transform.GetChild(2).GetComponent<Button>().onClick.AddListener(QuitGame);
+        transform.GetChild(3).GetComponent<Button>().onClick.AddListener(QuitGame);
+        
     }
 
     // Update is called once per frame

@@ -41,12 +41,10 @@ public class SpawnZone : MonoBehaviour
     private int spawnLimit = 20;
 
     [SerializeField]
-    List<GameObject> products;
+    protected List<GameObject> products;
 
     private List<GameObject> active;
 
-    [SerializeField]
-    List<BaseEntityFactory> factories;
     private void Awake()
     {
         InitArea();
@@ -100,37 +98,16 @@ public class SpawnZone : MonoBehaviour
     } 
     protected virtual void GenEntity()
     {
-        GameObject go = null;
-        //float heightFix = 
-        if (builtInfactory)
-        {
-            go = Instantiate(products[Random.Range(0, products.Count)], Random3DPoint(), new Quaternion());
-        }
-        else
-        {
-            if (partialGeneration)
-            {
-                foreach(BaseEntityFactory factory in factories)
-                {
-                    GameObject obj = factory.MakeProgress();
-                    if (obj)
-                    {
-                       go = Instantiate(obj, Random3DPoint(), new Quaternion());
-                    }
-                }
-            }
-            else
-            {
-                foreach (BaseEntityFactory factory in factories)
-                {
-                    GameObject obj = factory.GenEntity();
-                    if (obj)
-                    {
-                        go = Instantiate(obj, Random3DPoint(), new Quaternion());
-                    }
-                }
-            }
-        }
+        AddToList(Instantiate(products[Random.Range(0, products.Count)], Random3DPoint(), new Quaternion()));
+    }
+
+    protected virtual void GenEntity(int i)
+    {
+        AddToList(Instantiate(products[i % products.Count], Random3DPoint(), new Quaternion()));
+    }
+
+    protected void AddToList(GameObject go)
+    {
         active.Add(go);
     }
 

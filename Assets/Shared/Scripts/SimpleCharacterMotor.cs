@@ -55,7 +55,7 @@ public class SimpleCharacterMotor : MonoBehaviour
     }
 
     void UpdateTranslation()
-    {
+    {/*
         if (controller.isGrounded)
         {
             var x = Input.GetAxis("Horizontal");
@@ -71,6 +71,6 @@ public class SimpleCharacterMotor : MonoBehaviour
             movement.y -= gravity * Time.deltaTime;
         }
         finalMovement = Vector3.Lerp(finalMovement, movement, Time.deltaTime * movementAcceleration);
-        controller.Move(finalMovement * Time.deltaTime);
+        controller.Move(finalMovement * Time.deltaTime);*/
     }
 }

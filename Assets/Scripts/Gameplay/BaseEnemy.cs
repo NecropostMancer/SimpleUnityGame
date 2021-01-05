@@ -77,4 +77,9 @@ public abstract class BaseEnemy : MonoBehaviour
         canDoNextAction = true;
     }
 
+    public virtual GameObject Clone(Vector3 at,Quaternion to = new Quaternion())
+    {
+        return Instantiate(gameObject, at, to);
+    }
+
 }

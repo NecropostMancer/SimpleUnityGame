@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class DebugOnly : Singleton<DebugOnly>
 {
-    private GameSceneManager gameSceneManager;
+    private GameAssetsManager gameSceneManager;
     // Start is called before the first frame update
     void Start()
     {
-        gameSceneManager = GameSceneManager.instance;
+        gameSceneManager = GameAssetsManager.instance;
     }
 
     // Update is called once per frame

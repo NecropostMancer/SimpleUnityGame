@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//deprecated
+
+
 //Manifest是为了节省一些继承的接口数量，
 //子类直接复写自己的生成方法，在其中决定
 //如何使用manifest及其自定义的子类。
+[System.Obsolete("using prototype for enemygen instead.")]
 public abstract class BaseEntityFactory : MonoBehaviour
 {
     [SerializeField]

@@ -89,7 +89,14 @@ public class BattleManager : Singleton<BattleManager>
 
     public void SendUICommand(UICommand cmd)
     {
-        gameUIManager.Inform(cmd);
+        if (gameUIManager == null)
+        {
+            Debug.LogError("No UIManager can be found.");
+        }
+        else
+        {
+            gameUIManager.Inform(cmd);
+        }
     }
 
     // Update is called once per frame
