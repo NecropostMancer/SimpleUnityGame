@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class BattleUIBundle : UIBundle
+public class BattleUIBundle : MonoBehaviour
 {
 
     private Canvas UICanvasRoot;
@@ -16,21 +16,7 @@ public class BattleUIBundle : UIBundle
     private int curAmmo;
     private int maxAmmo;
     private int maxMaga;
-    public override void SendCommand(UICommand command)
-    {
-        
-        switch (command.GetType().Name)//oh.
-        {
-            case nameof(AmmoCommand):
-                AmmoChange(command);
-                break;
-            case nameof(AimCommand):
-                AimChange(command);
-                break;
-            default:
-                break;
-        }
-    }
+    
 
 
     // Start is called before the first frame update
@@ -43,44 +29,42 @@ public class BattleUIBundle : UIBundle
         aimRef = aim.GetComponent<AimController>();
     }
 
-    void AimChange(UICommand command)
+    public void AimChange(float str)
     {
-        AimCommand cmd = command as AimCommand;
-        
-        aimRef.Expand(cmd.str);
+        aimRef.Expand(str);
         
     }
-
-    void AmmoChange(UICommand command)
+    public void ResetAim(float a)
     {
-        AmmoCommand cmd = command as AmmoCommand;
-        
-        if (cmd.shot)
+        aimRef.ResetAim(a);
+    }
+    public void AmmoReset(int maxAmmo,int maxBack)
+    {
+        curAmmo = this.maxAmmo = maxAmmo;
+        this.maxMaga = maxBack;
+        ammoInspectorRef.SetcurAmmo(curAmmo);
+        ammoInspectorRef.SetcurMaga(maxMaga);
+        ammoInspectorRef.SetmaxAmmo(maxAmmo);
+    }
+    public void AmmoChange(bool isShooting)
+    {
+
+        if (isShooting)
         {
             curAmmo--;
             ammoInspectorRef.SetcurAmmo(curAmmo);
-
-        }else if (cmd.reload)
+        }
+        else
         {
             curAmmo = maxAmmo;
             maxMaga--;
             ammoInspectorRef.SetcurAmmo(curAmmo);
             ammoInspectorRef.SetcurMaga(maxMaga);
         }
-        else if(cmd.reset)
-        {
-            curAmmo = maxAmmo = cmd.maxAmmo;
-            maxMaga = cmd.maxMaga;
-            ammoInspectorRef.SetcurAmmo(curAmmo);
-            ammoInspectorRef.SetcurMaga(maxMaga);
-            ammoInspectorRef.SetmaxAmmo(maxAmmo);
-        }
+        
+            
+        
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

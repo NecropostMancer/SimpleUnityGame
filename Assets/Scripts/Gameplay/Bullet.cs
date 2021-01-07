@@ -17,13 +17,18 @@ public class Bullet : Projectile
         
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2 + maxBias * randx, Screen.height / 2 + maxBias * randy, Camera.main.nearClipPlane));
         //if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, ~(1 << 9)))
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 1000f,~LayerMask.GetMask("MovingObjectDetector")))
         {
 
 
-            BaseEnemy enemy = hitInfo.collider.gameObject.GetComponent<BaseEnemy>();
+            BaseEnemy enemy = hitInfo.collider.gameObject.GetComponentInParent<BaseEnemy>();
             if (enemy != null)
             {
+                Debug.Log(hitInfo.collider.gameObject);
+                if (hitInfo.collider.gameObject.CompareTag("Critical"))
+                {
+                    enemy.Hit(str * 40.0f, 1, 0);
+                }
                 enemy.Hit(str * 20.0f, 1, 0);
             }
             else

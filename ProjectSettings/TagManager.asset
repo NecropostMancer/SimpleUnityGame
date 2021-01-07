@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UIBundle
   - Manager
+  - Critical
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Player1stView
   - Bullet
   - attackAble
-  - 
+  - MovingObjectDetector
   - 
   - 
   - 

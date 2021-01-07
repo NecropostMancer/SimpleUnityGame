@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MainUIBundle : UIBundle
 {
 
-
+    
     private void OnLevelWasLoaded(int level)
     {
         
@@ -14,7 +14,7 @@ public class MainUIBundle : UIBundle
 
     void LoadScene()
     {
-        gameUIManager.InvokeSceneManager(1);
+        GameAssetsManager.instance.LoadSceneByName("LevelSelection");
     }
 
     void QuitGame()
@@ -30,9 +30,10 @@ public class MainUIBundle : UIBundle
     // Start is called before the first frame update
     void Start()
     {
-        transform.GetChild(1).GetComponent<Button>().onClick.AddListener(LoadScene);
-        transform.GetChild(3).GetComponent<Button>().onClick.AddListener(QuitGame);
-        
+        Transform y = transform.GetChild(0).GetChild(0);
+        y.Find("LOAD").GetComponent<Button>().onClick.AddListener(LoadScene);
+        y.Find("NEW").GetComponent<Button>().onClick.AddListener(LoadScene);
+        y.Find("QUIT").GetComponent<Button>().onClick.AddListener(QuitGame);
     }
 
     // Update is called once per frame

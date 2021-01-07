@@ -13,11 +13,19 @@ public class GameAssetsManager : Singleton<GameAssetsManager>
 
     private AsyncOperation opRef;
 
-
+    private UIBundle bundle;
     //正确运行依赖于场景的正确命名。
     //BattleScene[1-9]
     //MainMenu
     //LoadingScene
+    //LevelSelection
+    //Store
+    public void LoadSceneByName(string name,callback cb = null)
+    {
+        currentSceneName = name;
+        opRef = SceneManager.LoadSceneAsync(currentSceneName); //watch out!
+        StartCoroutine(QueryProgress(cb));
+    }/*
     public void LoadBattleScene(int level,callback cb = null)
     {
 
@@ -46,7 +54,7 @@ public class GameAssetsManager : Singleton<GameAssetsManager>
         currentSceneName = "Store";
         opRef = SceneManager.LoadSceneAsync(currentSceneName); //watch out!
         StartCoroutine(QueryProgress(cb));
-    }
+    }*/
     //加载界面有些动画需要控制，因此给它新派了一个类，
     //本着方便的原则，就干脆让sencemanager管理了。
     //目前所有其它的“正常”加载都是通过UI控制的，因此
@@ -57,6 +65,8 @@ public class GameAssetsManager : Singleton<GameAssetsManager>
     //如果把UI初始化的职责移交给这里，这个类就有望单独发挥
     //作用，但是代价是两个Manager耦合更深，目前这里还不需要持有
     //UImanager的引用。
+    //1/5:
+    //UImanager 有啥用？删了算了。
     IEnumerator QueryProgress(callback cb = null)
     {
         LoadingSceneActive();

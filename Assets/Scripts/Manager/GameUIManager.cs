@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
+
+
+[Obsolete("Useless at most cases. Bc no UI have to be actually managed and collab with others.")]
 public class GameUIManager : Singleton<GameUIManager>
 {
     //????
@@ -25,19 +29,19 @@ public class GameUIManager : Singleton<GameUIManager>
     {
         if(type == 0)
         {
-            gameSceneManager.LoadMainMenu(Callback);
+            //gameSceneManager.LoadMainMenu(Callback);
         }
         else if(type == -1)
         {
-            gameSceneManager.LoadSelection(Callback);
+            //gameSceneManager.LoadSelection(Callback);
         }
         else if(type == -2)
         {
-            gameSceneManager.LoadStore(Callback);
+            //gameSceneManager.LoadStore(Callback);
         }
         else
         {
-            gameSceneManager.LoadBattleScene(type,Callback);
+            //gameSceneManager.LoadBattleScene(type,Callback);
         }
         if (bundle != null)
         {

@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
 
     public bool infAmmo = false;
 
+    public Vector2 clampDeg = new Vector2(0, 180);
+
     bool lockCursor
     {
         set
@@ -58,7 +60,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private WeaponSlot weaponSlot;
 
-    
+    private BattleUIBundle battleUIBundle;
 
     void Start()
     {
@@ -68,6 +70,15 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         settingCurFov = FirstCamera.fieldOfView;
+        battleUIBundle = GameObject.FindGameObjectWithTag("UIBundle").GetComponent<BattleUIBundle>();
+        if (clampDeg.x < 1)
+        {
+            clampDeg.x = 1;
+        }
+        if (clampDeg.y > 179)
+        {
+            clampDeg.y = 179;
+        }
     }
     Vector2 lastDiag;
     bool canResume = false;
@@ -113,16 +124,16 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            weaponSlot.currentWeapon.Fire(true);
+            weaponSlot.m_currentWeapon.Fire(true);
             
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            weaponSlot.currentWeapon.Fire(false);
+            weaponSlot.m_currentWeapon.Fire(false);
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
-            weaponSlot.currentWeapon.Reload();
+            weaponSlot.m_currentWeapon.Reload();
         }
         if(coroutineRunning == false){
             if (Input.GetMouseButtonDown(1))
@@ -143,15 +154,17 @@ public class PlayerController : MonoBehaviour
         }
         //transform
 
-        Vector2 delta = new Vector2(horizontal * HSpeed * -1 * speedMult, vertical * VSpeed * speedMult);
+        
 
+        Vector2 delta = new Vector2(horizontal * HSpeed * -1 * speedMult, vertical * VSpeed * speedMult);
+        
         float angle = (pivot2.eulerAngles.x + 90f)%360;
 
-        if(angle + delta.x < 1f)
+        if(angle + delta.x < clampDeg.x)
         {
             delta.x = 0;
         }
-        else if(angle + delta.x > 100f)
+        else if(angle + delta.x > clampDeg.y)
         {
             delta.x = 0;
         }
@@ -167,7 +180,7 @@ public class PlayerController : MonoBehaviour
 
         //do recoil
         
-        if(weaponSlot.currentWeapon.GetRecoilStr(out Quaternion str))
+        if(weaponSlot.m_currentWeapon.GetRecoilStr(out Quaternion str))
         {
             FirstCamera.transform.localRotation = Quaternion.Slerp(FirstCamera.transform.localRotation, str, 0.8f);
             //FirstCamera.transform.localRotation = str;
@@ -186,34 +199,14 @@ public class PlayerController : MonoBehaviour
             }
         }
         
-        /*
-        if (weaponSlot.currentWeapon.GetRecoilStr(out str))
-        {
-            FirstCamera.transform.localRotation = str;
-            //FirstCamera.transform.localRotation = str;
-            recoving = true;
-        }
-
-        else
-        {
-            if (recoving)
-            {
-                FirstCamera.transform.localRotation = str;
-                if (FirstCamera.transform.localRotation.eulerAngles.magnitude < 1)
-                {
-                    recoving = false;
-                }
-            }
-        }
-        */
         //debug
         if (infAmmo)
         {
-            weaponSlot.currentWeapon.infAmmo = true;
+            weaponSlot.m_currentWeapon.infAmmo = true;
         }
         else
         {
-            weaponSlot.currentWeapon.infAmmo = false;
+            weaponSlot.m_currentWeapon.infAmmo = false;
         }
         
     }
@@ -234,7 +227,7 @@ public class PlayerController : MonoBehaviour
         //all aiming animations are 4 frames.
         float curFov = settingCurFov;
         float step = (curFov - goalFov) / 4; 
-        Animator a = weaponSlot.currentWeapon.gameObject.GetComponent<Animator>();
+        Animator a = weaponSlot.m_currentWeapon.gameObject.GetComponent<Animator>();
         a.SetBool("AimingOff", false);
         a.SetBool("AimingOn",true);
         for(int i = 0; i < 4; i++)
@@ -245,6 +238,7 @@ public class PlayerController : MonoBehaviour
             FirstCamera.fieldOfView = curFov;
         }
         FirstCamera.fieldOfView = goalFov;
+        weaponSlot.Aim(true);
         canResume = true;
         coroutineRunning = false;
     }
@@ -262,6 +256,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator AimingOff()
     {
         coroutineRunning = true;
+        weaponSlot.Aim(false);
         while (!canResume)
         {
             yield return null;
@@ -270,7 +265,7 @@ public class PlayerController : MonoBehaviour
         //all aiming animations are 4 frames.
         float curFov = settingCurFov;
         float step = (curFov - goalFov) / 4;
-        Animator a = weaponSlot.currentWeapon.gameObject.GetComponent<Animator>();
+        Animator a = weaponSlot.m_currentWeapon.gameObject.GetComponent<Animator>();
         a.SetBool("AimingOn",false);
         a.SetBool("AimingOff",true);
         for (int i = 0; i < 4; i++)
@@ -290,5 +285,23 @@ public class PlayerController : MonoBehaviour
     private void ResetAiming()
     {
         
+    }
+
+
+    //callbacks.
+    public void SetRecoil(float recoil)
+    {
+        battleUIBundle.AimChange(recoil);
+    }
+
+    public void SetAmmo(bool isShoot)
+    {
+        battleUIBundle.AmmoChange(isShoot);
+    }
+
+    public void RefreshUI(int maxAmmo, int curBackup, float baseAcc)
+    {
+        battleUIBundle.AmmoReset(maxAmmo, curBackup);
+        battleUIBundle.ResetAim(baseAcc);
     }
 }

@@ -21,6 +21,7 @@ public class LevelSelectionCamera : MonoBehaviour
     {
         thisCamera = GetComponent<Camera>();
         pivot = new Vector3(801f, 4.6f, 676.32f);
+        transform.LookAt(pivot);
         distence = transform.position - pivot;
         this.transform.parent = null;
     }
@@ -28,46 +29,12 @@ public class LevelSelectionCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.RotateAround(pivot, Vector3.up, 0.02f);
+        transform.RotateAround(pivot, Vector3.up, 0.2f);
         if ((pivot - transform.position).sqrMagnitude > 10000)
         {
 
         }
-        if (Input.GetMouseButtonDown(0))
-        {
-            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-            eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-            if (results.Count != 0)
-            {
-                bool isUI = false;
-                foreach (RaycastResult hit in results)
-                {
-                    if (hit.gameObject.GetComponent<Image>() != null)
-                    {
-                        isUI = true;
-                        break;
-                    }
-                }
-                if (!isUI)
-                {
-                    foreach (RaycastResult hit in results)
-                    {
-                        LevelPivot levelPivot = hit.gameObject.GetComponent<LevelPivot>();
-                        if (levelPivot)
-                        {
-                            //change UI
-                            Switch(hit.gameObject.transform.position);
-                            m_isSwitching = true;
-                        }
-                    }
-
-                }
-
-
-            }
-        }
+        
     }
     private bool m_isSwitching = false;
     IEnumerator GoNewPivot(Vector3 camPos, Vector3 newPivot, Vector3 oldPivot)
@@ -89,10 +56,10 @@ public class LevelSelectionCamera : MonoBehaviour
         
     }
 
-    void Switch(Vector3 pos)
+    public void Switch(Vector3 pos)
     {
         if (m_isSwitching) return;
-        
+        m_isSwitching = true;
         StartCoroutine(GoNewPivot(transform.position, pos, pivot));
         pivot = pos;
     }

@@ -18,7 +18,7 @@ public class BootStrap : MonoBehaviour
     {
         if (a == 0)
         {
-            GameUIManager.instance.InvokeSceneManager(0);
+            GameAssetsManager.instance.LoadSceneByName("MainMenu");
             SceneManager.UnloadSceneAsync("Bootstrap");
             Destroy(this);
         }

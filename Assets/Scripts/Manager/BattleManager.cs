@@ -12,7 +12,7 @@ public class BattleManager : Singleton<BattleManager>
     private readonly Dictionary<int, BaseEnemy> enemyRef = new Dictionary<int, BaseEnemy>();
     private readonly Dictionary<int, SpawnZone> spawnRef = new Dictionary<int, SpawnZone>();
 
-    private GameUIManager gameUIManager;
+    private GameAssetsManager gameAssetsManager;
     //private AssetsLoadSystem Loader;
 
     private int sinceLastCheck = 0;
@@ -73,7 +73,7 @@ public class BattleManager : Singleton<BattleManager>
 
     void Win()
     {
-        gameUIManager.InvokeSceneManager(0);
+        gameAssetsManager.LoadSceneByName("LevelSelection");
     }
 
     void Fail()
@@ -83,19 +83,19 @@ public class BattleManager : Singleton<BattleManager>
 
     void Start()
     {
-        gameUIManager = GameUIManager.instance;
-        gameUIManager.InstallUI();
+        gameAssetsManager = GameAssetsManager.instance;
+        //gameAssetsManager.InstallUI();
     }
 
     public void SendUICommand(UICommand cmd)
     {
-        if (gameUIManager == null)
+        if (gameAssetsManager == null)
         {
             Debug.LogError("No UIManager can be found.");
         }
         else
         {
-            gameUIManager.Inform(cmd);
+            //gameAssetsManager.Inform(cmd);
         }
     }
 

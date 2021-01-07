@@ -5,11 +5,12 @@ using System;
 
 namespace UIExtensions
 {
-    public class AffinedImage : Image
+    public class ProjectionImage : Image
     {
 
         protected Matrix4x4 perspective;
 
+        
         public void SetPerspective()
         {
 

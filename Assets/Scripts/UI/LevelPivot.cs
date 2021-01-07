@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class LevelPivot : MonoBehaviour
 {
+    public int id;
+    public string text;
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -32,7 +32,7 @@ public class Weapon : Playable
     bool isReloading = false;
     int totalShoot = 0;
 
-    bool isAiming = false;
+    public bool isAiming = false;
 
     //debug
     public bool infAmmo = false;
@@ -48,8 +48,11 @@ public class Weapon : Playable
     private Transform shellThrowRelAt;
     private GameObject shell;
 
-    private readonly AmmoCommand command = new AmmoCommand();
-    private readonly AimCommand aimCommand = new AimCommand();
+    //private readonly AmmoCommand command = new AmmoCommand();
+    //private readonly AimCommand aimCommand = new AimCommand();
+
+    private static PlayerController playerController; 
+
     // 依赖于prefab的层级结构。
     // Start is called before the first frame update
     void Start()
@@ -62,18 +65,15 @@ public class Weapon : Playable
         shooter.SetDamageBuff(damageMult);
         shooter.SetReady(true);
 
-        
-
-        
-        command.reset = true;
-        command.maxAmmo = magazineSize;
-        command.maxMaga = currentBackup;
-        SendUICommand(command);
-        command.reset = false;
-
-        aimCommand.str = Mathf.Clamp((1f - accuracy) * 10, 1, 10);
-        SendUICommand(aimCommand);
-
+        playerController = GetComponentInParent<PlayerController>();
+        if (playerController == null)
+        {
+            Debug.LogError("Weapon: No controller can be found.");
+        }
+        else
+        {
+            playerController.RefreshUI(magazineSize, currentBackup, currentAcc);
+        }
         if (transform.childCount > 4)
         {
             throwShell = true;
@@ -109,12 +109,13 @@ public class Weapon : Playable
                     curRecoilVector.x= curRecoilVector.y=0;
                     curRecoil = 0;
                     maxRecoilVector.x = maxRecoilVector.y = maxRecoilBeforeStop = 0;
-                    aimCommand.str = Mathf.Clamp((1f - accuracy) * 10, 1, 10);
-                    SendUICommand(aimCommand);
+                    //aimCommand.str = Mathf.Clamp((1f - accuracy) * 10, 1, 10);
+                    playerController.SetRecoil(0);
                 }
             }
-            aimCommand.str = Mathf.Clamp((1f - accuracy) * 10 + curRecoil / (curRecoil + 20) * 10,1,10);
-            SendUICommand(aimCommand);
+            //aimCommand.str = Mathf.Clamp((1f - accuracy) * 10 + curRecoil / (curRecoil + 20) * 10,1,10);
+            //SendUICommand(aimCommand);
+            playerController.SetRecoil(curRecoil);
         }
         else
         {
@@ -188,9 +189,9 @@ public class Weapon : Playable
             if (!infAmmo)
             {
                 currentAmmo--;
-                command.shot = true;
-                SendUICommand(command);
-                command.shot = false;
+                //command.shot = true;
+                playerController.SetAmmo(true);
+                //command.shot = false;
             }
             ApplyRecoil();
             
@@ -211,6 +212,7 @@ public class Weapon : Playable
     {
         Animator a = GetComponent<Animator>();
         a.SetTrigger("Shoot");
+
         yield return null;
         a.ResetTrigger("Shoot");
     }
@@ -245,9 +247,10 @@ public class Weapon : Playable
         {
             currentAmmo = magazineSize;
             currentBackup--;
-            command.reload = true;
-            SendUICommand(command);
-            command.reload = false;
+            //command.reload = true;
+            //SendUICommand(command);
+            //command.reload = false;
+            playerController.SetAmmo(false);
         }
         isReloading = false;
         
