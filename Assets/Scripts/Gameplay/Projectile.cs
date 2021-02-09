@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class Projectile : MonoBehaviour
 {
     [SerializeField]
-    protected float damage=1f;
+    protected float m_Damage=1f;
     
     public virtual Projectile InstantiateProj(Vector3 at,Quaternion q)
     {
@@ -18,7 +18,7 @@ public abstract class Projectile : MonoBehaviour
 
     public virtual float GetDamage()
     {
-        return damage;
+        return m_Damage;
     }
 
     public abstract void Shoot(Vector3 speed,float damageMult);

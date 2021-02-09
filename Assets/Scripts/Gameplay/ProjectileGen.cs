@@ -1,26 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileGen : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public Projectile projectilePrefab;
+    public Projectile g_ProjectilePrefab;
     [SerializeField]
-    private float throwSpeed = 100.0f;
+    private float m_ThrowSpeed = 100.0f;
     [SerializeField]
-    private float damageMult = 1.0f;
-    private float curDamageMult;
+    private float m_DamageMult = 1.0f;
+    private float m_CurDamageMult;
     [SerializeField]
-    private Transform aim;
+    private Transform m_Aim;
     [SerializeField]
-    bool isProjectile = true;
+    private bool m_IsProjectile = true;
     [SerializeField]
-    AreaEffect showBulletHitPoint;
-    bool active = false;
+    private AreaEffect m_ShowBulletHitPoint;
+    private bool m_Active = false;
 
-    private readonly List<ParticleSystem> shootingParticles = new List<ParticleSystem>();
+    private readonly List<ParticleSystem> m_ShootingParticles = new List<ParticleSystem>();
 
 
     public void Awake()
@@ -32,13 +31,13 @@ public class ProjectileGen : MonoBehaviour
             ps = transform.GetChild(i).GetComponent<ParticleSystem>();
             if (ps)
             {
-                shootingParticles.Add(ps);
+                m_ShootingParticles.Add(ps);
             }
         }
         //if missing default values
-        if (projectilePrefab == null)
+        if (g_ProjectilePrefab == null)
         {
-            if (isProjectile)
+            if (m_IsProjectile)
             {
                 //projectilePrefab = ((GameObject)Resources.Load("Assets/Prefab/DefaultProj.prefab")).GetComponent<Projectile>();
             }
@@ -52,23 +51,23 @@ public class ProjectileGen : MonoBehaviour
 
     public void ShootProjectile(float accuracy)
     {
-        if (!active)
+        if (!m_Active)
         {
             return;
         }
-        Vector3 dir = (transform.position - aim.position).normalized;
-        if (isProjectile)
+        Vector3 dir = (transform.position - m_Aim.position).normalized;
+        if (m_IsProjectile)
         {
             
             //strange rotating?
-            Projectile a = projectilePrefab.InstantiateProj(transform.position, transform.rotation);
-            a.Shoot(throwSpeed * dir,curDamageMult*damageMult);
+            Projectile a = g_ProjectilePrefab.InstantiateProj(transform.position, transform.rotation);
+            a.Shoot(m_ThrowSpeed * dir,m_CurDamageMult*m_DamageMult);
         }
         else
         {
             //shoot regular dummy bullet
             
-            projectilePrefab.InstantiateProj(transform.position, transform.rotation).Shoot(new Vector3(accuracy,0,0), curDamageMult * damageMult);
+            g_ProjectilePrefab.InstantiateProj(transform.position, transform.rotation).Shoot(new Vector3(accuracy,0,0), m_CurDamageMult * m_DamageMult);
         }
         EmitParticles(1);
     }
@@ -76,22 +75,22 @@ public class ProjectileGen : MonoBehaviour
 
     public void SetDamageBuff(float a)
     {
-        curDamageMult = a;
+        m_CurDamageMult = a * GameAssetsManager.instance.GetSave().attackBonus;
     }
 
     private float GetTotalDamageBuff()
     {
-        return curDamageMult * damageMult;
+        return m_CurDamageMult * m_DamageMult;
     }
     
     public void SetReady(bool a)
     {
-        active = a;
+        m_Active = a;
     }
 
     private void EmitParticles(int cnt)
     {
-        foreach(ParticleSystem ps in shootingParticles)
+        foreach(ParticleSystem ps in m_ShootingParticles)
         {
             ps.Emit(cnt);
         }

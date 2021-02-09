@@ -17,10 +17,10 @@ public class PathFinder : MonoBehaviour
         
     }
 
-    public NavMeshPath calc(Vector3 sourcePosition,Vector3 targetPosition,int areaMask = NavMesh.AllAreas)
+    public NavMeshPath calc(Vector3 targetPosition, NavMeshAgent agent)
     {
         NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(sourcePosition, targetPosition, areaMask, path);
+        agent.CalculatePath(targetPosition,path);
         return path;
     }
 }

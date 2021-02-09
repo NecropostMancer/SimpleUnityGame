@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //没东西
-public abstract class GameObjectPool
+public abstract class GameObjectPool<T>
 {
 
-    protected readonly ConcurrentBag<GameObject> _objects;
+    protected ConcurrentBag<GameObject> _objects = new ConcurrentBag<GameObject>();
     //private readonly Func<T> _objectGenerator;
     protected int curMax;
 
 
-    virtual public GameObject Get()
+    virtual public GameObject Get(T t)
     {
         _objects.TryTake(out GameObject re);
         return re;

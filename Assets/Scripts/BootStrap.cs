@@ -8,20 +8,26 @@ public class BootStrap : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameObject.AddComponent<GameAssetsManager>();
+        gameObject.AddComponent<GameUIManager>();
+        //gameObject.AddComponent<AudioManager>();
+        //gameObject.AddComponent<BattleManager>();
+        //SceneManager.UnloadSceneAsync("Bootstrap");
         
     }
-
-    //确保所有的start和awake都执行好，初始化整个游戏。
-    int a = 0;
-    // Update is called once per frame
-    void Update()
+    float m_Temp;
+    private void Update()
     {
-        if (a == 0)
+        m_Temp += Time.deltaTime;
+        if (m_Temp > 3.1)
         {
-            GameAssetsManager.instance.LoadSceneByName("MainMenu");
-            SceneManager.UnloadSceneAsync("Bootstrap");
-            Destroy(this);
+            AnimationDone();
         }
-        a++;
+    }
+    void AnimationDone()
+    {
+        GameAssetsManager.instance.LoadSceneByName("MainMenu");
+        Destroy(GetComponent<BootStrap>());
+        DontDestroyOnLoad(this.gameObject);
     }
 }

@@ -68,6 +68,7 @@ public class AimController : MonoBehaviour
     public void ResetAim(float defaultAcc)
     {
         m_curAcc = defaultAcc;
+        Expand(0);
     }
 
     public void Hit()

@@ -9,13 +9,14 @@ public class AmmoInspector : MonoBehaviour
     private Text curMaga;
     private Text maxAmmo;
 
+    private bool enableExtraDigit = false;
     // Start is called before the first frame update
     // 依赖于prefab的层级结构。
     void Start()
     {
-        curAmmo = transform.GetChild(0).GetComponent<Text>();
-        curMaga = transform.GetChild(1).GetComponent<Text>();
-        maxAmmo = transform.GetChild(2).GetComponent<Text>();
+        curAmmo = transform.GetChild(1).GetComponent<Text>();
+        curMaga = transform.GetChild(2).GetComponent<Text>();
+        maxAmmo = transform.GetChild(3).GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -27,7 +28,14 @@ public class AmmoInspector : MonoBehaviour
 
     public void SetcurAmmo(int a)
     {
-        curAmmo.text = a.ToString();
+        if (enableExtraDigit)
+        {
+            curAmmo.text = a.ToString("000");
+        }
+        else
+        {
+            curAmmo.text = a.ToString("00");
+        }
     }
 
     public void SetcurMaga(int a)
@@ -37,6 +45,15 @@ public class AmmoInspector : MonoBehaviour
 
     public void SetmaxAmmo(int a)
     {
-        maxAmmo.text = a.ToString();
+        if (a > 99)
+        {
+            enableExtraDigit = true;
+            maxAmmo.text = a.ToString("000");
+        }
+        else
+        {
+            enableExtraDigit = false;
+            maxAmmo.text = a.ToString("00");
+        }
     }
 }

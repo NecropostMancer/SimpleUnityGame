@@ -7,7 +7,8 @@ public class WeaponSlot : MonoBehaviour
 
 
     public Weapon m_currentWeapon;
-    [SerializeField]
+    private int m_Index = -1;
+
     private Weapon[] m_Weapons;
     
     private GameObject[] m_WeaponPool;
@@ -17,7 +18,7 @@ public class WeaponSlot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_Weapons = BattleManager.instance.GetCurrentWeapon().ToArray();
         m_WeaponPool = new GameObject[m_Weapons.Length];
         if(m_Weapons.Length != 0)
         Switch(0);
@@ -31,34 +32,30 @@ public class WeaponSlot : MonoBehaviour
 
     public void Switch(int index)
     {
-        index %= m_Weapons.Length;
-        //Destroy(currentWeapon.gameObject);
-        //currentWeapon = Weapons[index];
+        if (index >= m_Weapons.Length) return;
         
-        if(transform.childCount != 0)
-        {
-            for(int i = 0; i < transform.childCount; i++)
-            {
-                Destroy(transform.GetChild(i).gameObject);
-            }
-        }
-        
-        m_currentWeapon = Instantiate(m_Weapons[index].gameObject, transform).GetComponent<Weapon>();
-        Utils.SetLayerRecursively(m_currentWeapon.gameObject, 8);//第一人称摄像机用，专拍武器，防止穿模
-    }
-
-    private GameObject LoadWeapon(int index)
-    {
+        if (index == m_Index) return;
+        m_Index = index;
         if(m_WeaponPool[index] == null)
         {
-            m_WeaponPool[index] = m_Weapons[index].gameObject;
+            m_WeaponPool[index] = Instantiate(m_Weapons[index].gameObject, transform);
+            Utils.SetLayerRecursively(m_WeaponPool[index].gameObject, 8);//第一人称摄像机用，专拍武器，防止穿模
+            m_WeaponPool[index].gameObject.SetActive(false);
         }
-        return m_WeaponPool[index];
+        if (m_currentWeapon != null)
+        {
+            m_currentWeapon.ClearAnimator();
+            m_currentWeapon.gameObject.SetActive(false);
+            
+        }
+        m_currentWeapon = m_WeaponPool[index].GetComponent<Weapon>();
+        m_currentWeapon.gameObject.SetActive(true);
     }
 
     public void Aim(bool a)
     {
-        m_currentWeapon.isAiming = a;
+        m_currentWeapon.Aim(a);
+        
     }
 
 }

@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 5143936999038826995}
   - component: {fileID: -543578324711201547}
   - component: {fileID: -4384090195208101995}
+  - component: {fileID: 5885233555639923673}
   m_Layer: 0
   m_Name: 'Luger P08 '
   m_TagString: Untagged
@@ -129,22 +130,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5d105872cbe0ad489e9331dea695d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magazineSize: 12
-  backupMagazine: 3
-  shootCd: 20
-  damageMult: 1
-  accuracy: 0.9
-  recoil: 10
-  curRecoil: 0
-  maxRecoilBeforeStop: 0
-  currentAcc: 1
-  isAiming: 0
-  infAmmo: 0
-  fireMode: 0
-  curRecoilVector: {x: 0, y: 0}
-  maxRecoilVector: {x: 0, y: 0}
-  recoveryStep: 0
-  recoveryVector: {x: 0, y: 0}
+  m_MagazineSize: 16
+  m_BackupMagazine: 7
+  m_ShootCd: 0.1
+  m_DamageMult: 25
+  m_Accuracy: 0.801
+  m_Recoil: 10
+  m_CurRecoil: 0
+  m_MaxRecoilBeforeStop: 0
+  m_CurrentAcc: 1
+  m_IsAiming: 0
+  m_InfAmmo: 0
+  m_FireMode: 0
+  m_CurRecoilVector: {x: 0, y: 0}
+  m_MaxRecoilVector: {x: 0, y: 0}
+  m_RecoveryStep: 0
+  m_RecoveryVector: {x: 0, y: 0}
+  m_FireSound:
+  - {fileID: 8300000, guid: e30724d337ce95546b62e76b9c5b9589, type: 3}
+  - {fileID: 8300000, guid: 1992261784ab8e040ace92b4bfa6a247, type: 3}
+  - {fileID: 8300000, guid: 02d34b7c7684dfe4e8a7a0b1da6b180e, type: 3}
+  m_UsingLoopingFireSound: 0
 --- !u!95 &-4384090195208101995
 Animator:
   serializedVersion: 3
@@ -164,6 +170,102 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!82 &5885233555639923673
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4465422264073604613}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6329398909124161938
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,7 +290,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6329398909124161938}
   m_LocalRotation: {x: 0.57979816, y: -0.000000024551731, z: 0.000000016899927, w: 0.8147602}
-  m_LocalPosition: {x: 0, y: 0.189, z: 0.09}
+  m_LocalPosition: {x: -0, y: 0.1275, z: 0.09}
   m_LocalScale: {x: 0.01629, y: 0.02481, z: 0.01629}
   m_Children: []
   m_Father: {fileID: 5143936999038826995}
@@ -237,13 +339,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b350d8bc47018d438dcd28af27c5d2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 2808605590349515699, guid: 09c464f72eeefc446a363c4e1f4473bc,
+  g_ProjectilePrefab: {fileID: 2808605590349515699, guid: 09c464f72eeefc446a363c4e1f4473bc,
     type: 3}
-  throwSpeed: 5
-  damageMult: 1
-  aim: {fileID: 997570544908289343}
-  isProjectile: 0
-  showBulletHitPoint: {fileID: 0}
+  m_ThrowSpeed: 100
+  m_DamageMult: 1
+  m_Aim: {fileID: 997570544908289343}
+  m_IsProjectile: 0
+  m_ShowBulletHitPoint: {fileID: 0}
 --- !u!1 &8542359919914713713
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,12 +411,12 @@ PrefabInstance:
     - target: {fileID: 4146350525482621354, guid: 4b57938fbcc3d994aa161543ad4c1f3c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4146350525482621354, guid: 4b57938fbcc3d994aa161543ad4c1f3c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1828
+      value: 0.1229
       objectReference: {fileID: 0}
     - target: {fileID: 4146350525482621354, guid: 4b57938fbcc3d994aa161543ad4c1f3c,
         type: 3}

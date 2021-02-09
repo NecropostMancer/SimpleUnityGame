@@ -10,29 +10,36 @@ TODO: 把粒子安上去.
  */
 public class AreaEffect : MonoBehaviour
 {
-    bool run = false;
+    private bool m_Run = false;
     
     //效果扩张，保持最大，收缩的帧数
-    int expandFrame = 0;
-    int holdFrame = 10;
-    int declineFrame = 0;
+    private int m_ExpandFrame = 0;
+    private int m_HoldFrame = 10;
+    private int m_DeclineFrame = 0;
     
     //伤害加成(可以手动设置，方便测试)
-    public float damageMult = 1f;
+    public float m_DamageMult = 1f;
 
     //这个爆炸将会对范围内对象造成多少伤害
     //-1的理由在 Impact协程处详述。
-    private float damage = -1f;
+    private float m_Damage = -1f;
 
     //爆炸除视觉效果外的实际影响范围
-    float actualRadius = 30.0f;
-    
+    [SerializeField]
+    float m_ActualRadius = 2.5f;
+
+    private AudioSource m_AudioSource;
+
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        StartCoroutine(Impact());
-        StartCoroutine(ShowVisualEffect());
+        m_AudioSource = GetComponent<AudioSource>();
+        AudioManager.instance.AudioRegister(m_AudioSource, AudioManager.AudioType.GameSFX);
+        Impact();
+        //StartCoroutine(ShowVisualEffect());
+        m_ActualRadius *= transform.lossyScale.magnitude;
         
+
     }
 
     // Update is called once per frame
@@ -48,58 +55,46 @@ public class AreaEffect : MonoBehaviour
     计算伤害，可能会有卡死的问题，以后再想想。
     好像多余了，貌似可以保证发生在一帧里面
      */
-    private IEnumerator Impact()
+    private void Impact()
     {
-        
-        while(damage < 0)
+
+        /*transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+        while(m_Damage < 0)
         {
             yield return null;
         }
-        _Impact();
-    }
-
-    public void _Impact()
-    {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, actualRadius,1<<10);
-        foreach(Collider collider in colliders)
+        _Impact();*/
+        m_AudioSource.Play();
+        //不能放在oncollision里，因为所有的角色都是kinematic的
+        Collider[] colliders = Physics.OverlapSphere(transform.position, m_ActualRadius, 1 << 11);
+        foreach (Collider collider in colliders)
         {
             BaseEnemy enemy = collider.gameObject.GetComponent<BaseEnemy>();
             if (enemy != null)
             {
-                enemy.Hit(damage * damageMult,1f,0);
+                enemy.Hit(m_Damage * m_DamageMult, 1f, 0);
+                //StartCoroutine(ApplyDelayExplosionForce(collider.transform.GetChild(1).GetComponent<Rigidbody>())); //waiting for a re-do
+
             }
         }
-
-        
+        Destroy(gameObject, 10);
     }
 
-    private IEnumerator ShowVisualEffect()
+
+    IEnumerator ApplyDelayExplosionForce(Rigidbody rb)
     {
-
-        for(int i = 0;i < expandFrame; i++)
-        {
-            gameObject.transform.localScale = gameObject.transform.localScale * 1.1f;
-            yield return null;
-        }
-        for (int i = 0; i < holdFrame; i++)
-        {
-            yield return null;
-        }
-        for (int i = 0; i < declineFrame; i++)
-        {
-            gameObject.transform.localScale = gameObject.transform.localScale * 0.5f;
-            yield return null;
-        }
-        Destroy(gameObject);
+        yield return new WaitForSeconds(0.1f);
+        //rb.AddExplosionForce(1000, transform.position, actualRadius);
+        rb.velocity = new Vector3(0, 12, 0);
     }
-
     public void SetDamageMult(float a)
     {
-        damageMult = a;
+        m_DamageMult = a;
     }
 
     public void SetDamage(float a)
     {
-        damage = a;
+        m_Damage = a;
     }
+
 }

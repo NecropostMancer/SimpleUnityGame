@@ -4818,8 +4818,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.2
-      minScalar: 0.2
+      scalar: 0.1
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14267,6 +14267,7 @@ GameObject:
   - component: {fileID: 6825311001472529446}
   - component: {fileID: 5278064151898070602}
   - component: {fileID: 5423188225645457422}
+  - component: {fileID: -8407120233277999647}
   m_Layer: 0
   m_Name: K98
   m_TagString: Untagged
@@ -14305,21 +14306,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5d105872cbe0ad489e9331dea695d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magazineSize: 5
-  backupMagazine: 5
-  shootCd: 40
-  damageMult: 10
-  accuracy: 0.9
-  recoil: 10
-  curRecoil: 0
-  maxRecoilBeforeStop: 0
-  currentAcc: 1
-  infAmmo: 0
-  fireMode: 0
-  curRecoilVector: {x: 0, y: 0}
-  maxRecoilVector: {x: 0, y: 0}
-  recoveryStep: 0
-  recoveryVector: {x: 0, y: 0}
+  m_MagazineSize: 12
+  m_BackupMagazine: 5
+  m_ShootCd: 2
+  m_DamageMult: 100
+  m_Accuracy: 0.9
+  m_Recoil: 15
+  m_CurRecoil: 0
+  m_MaxRecoilBeforeStop: 0
+  m_CurrentAcc: 1
+  m_IsAiming: 0
+  m_InfAmmo: 0
+  m_FireMode: 0
+  m_CurRecoilVector: {x: 0, y: 0}
+  m_MaxRecoilVector: {x: 0, y: 0}
+  m_RecoveryStep: 0
+  m_RecoveryVector: {x: 0, y: 0}
+  m_FireSound:
+  - {fileID: 8300000, guid: 049790a44dfe2de48bd45edf3e517e1f, type: 3}
+  m_UsingLoopingFireSound: 0
 --- !u!95 &5423188225645457422
 Animator:
   serializedVersion: 3
@@ -14339,6 +14344,102 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!82 &-8407120233277999647
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6825311001472529447}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6825311001765768074
 GameObject:
   m_ObjectHideFlags: 0
@@ -14495,14 +14596,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b350d8bc47018d438dcd28af27c5d2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 2808605590349515699, guid: 09c464f72eeefc446a363c4e1f4473bc,
+  g_ProjectilePrefab: {fileID: 2808605590349515699, guid: 09c464f72eeefc446a363c4e1f4473bc,
     type: 3}
-  throwSpeed: 5
-  damageMult: 1
-  aim: {fileID: 6825311001942792452}
-  isProjectile: 0
-  showBulletHitPoint: {fileID: 5465728909136227634, guid: 7aa0e41f6a8f4924b98eae5994cf6336,
-    type: 3}
+  m_ThrowSpeed: 100
+  m_DamageMult: 1
+  m_Aim: {fileID: 6825311001942792452}
+  m_IsProjectile: 0
+  m_ShowBulletHitPoint: {fileID: 0}
 --- !u!1001 &237586304748246969
 PrefabInstance:
   m_ObjectHideFlags: 0

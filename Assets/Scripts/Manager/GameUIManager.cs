@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
+using UnityEngine.UI;
 
-
-
-[Obsolete("Useless at most cases. Bc no UI have to be actually managed and collab with others.")]
 public class GameUIManager : Singleton<GameUIManager>
 {
     //????
     WeakReference<UIBundle> bundle;
 
-    GameAssetsManager gameSceneManager; //尽量让同一级之间互通.
-
-    //操控当前的UIBundle，一个场景只能有一个Bundle，
+    //操控当前的UIBundle，一个场景只能有一个Bundle，(必须是canvas)
     //编辑时保证只有一个Bundle存在于一个Scene中，
     //运行时依赖于GameSceneManager的正确行为顺序。
+
+    bool isSceneSwitching = false;
+    
     public void Inform(UICommand cmd)
     {
         bundle.TryGetTarget(out UIBundle b);
@@ -27,53 +27,27 @@ public class GameUIManager : Singleton<GameUIManager>
 
     public void InvokeSceneManager(int type)
     {
-        if(type == 0)
-        {
-            //gameSceneManager.LoadMainMenu(Callback);
-        }
-        else if(type == -1)
-        {
-            //gameSceneManager.LoadSelection(Callback);
-        }
-        else if(type == -2)
-        {
-            //gameSceneManager.LoadStore(Callback);
-        }
-        else
-        {
-            //gameSceneManager.LoadBattleScene(type,Callback);
-        }
+        
         if (bundle != null)
         {
             HideAll();
         }
     }
-    //场景被加载完成后，貌似还得等一帧物体才能有反应，因此等待一下再调这个回调。
-    //用来加载当前场景的UI(主要就是在当前场景里面找放好的UIRoot)，找到后做些杂活，
-    //目前只是显示UI。
-    private void Callback()
+    
+    public void InstallUI(UIBundle UIbundle)
     {
-        StartCoroutine(DelayCallback());
-    }
-
-    IEnumerator DelayCallback()
-    {
-        yield return new WaitForSeconds(0.1f);
-        InstallUI();
-        ShowAll();
-    }
-
-    public void InstallUI()
-    {
-        GameObject go = GameObject.FindGameObjectWithTag("UIBundle");
-        bundle = new WeakReference<UIBundle>(go.GetComponent<UIBundle>());
+        
+        bundle = new WeakReference<UIBundle>(UIbundle);
         bundle.TryGetTarget(out UIBundle b);
         if (b)
         {
-            b.InjectManager(this);
+            
         }
     }
-
+    public void RemoveUI()
+    {
+        bundle = null;
+    }
     public void HideAll()
     {
         bundle.TryGetTarget(out UIBundle b);
@@ -94,10 +68,88 @@ public class GameUIManager : Singleton<GameUIManager>
         }
     }
 
+    private GameObject m_ActiveDialog;
+    private Button m_ActiveOK;
+    private Button m_ActiveCancel;
+    public bool CallMsgbox(string text = "PAUSE", MsgCallback whenOk = null, string okText = "OK")
+    {
+        if (GameAssetsManager.instance.IsBusy()) return false;
+        bundle.TryGetTarget(out UIBundle b);
+        m_ActiveDialog = Instantiate(m_MsgboxCache,b.transform) as GameObject;
+        TextMeshProUGUI[] texts = new TextMeshProUGUI[2];
+        texts = m_ActiveDialog.GetComponentsInChildren<TextMeshProUGUI>();
+        texts[0].text = text;
+        texts[1].text = okText;
+        m_ActiveOK = m_ActiveDialog.GetComponentInChildren<Button>();
+        m_ActiveOK.onClick.AddListener(delegate
+        {
+            
+            Destroy(m_ActiveDialog);
+            m_ActiveDialog = null;
+            m_ActiveOK = null;
+            if (whenOk !=null)
+            {
+                whenOk();
+            }
+        });
+        return true;
+    }
+
+    public bool CallDialog(string text, MsgCallback whenOk,MsgCallback whenCancel = null)
+    {
+        if (GameAssetsManager.instance.IsBusy()) return false;
+        bundle.TryGetTarget(out UIBundle b);
+        m_ActiveDialog = Instantiate(m_DialogCache, b.transform) as GameObject;
+        m_ActiveDialog.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        Button []buttons = m_ActiveDialog.GetComponentsInChildren<Button>();
+        m_ActiveOK = buttons[0];
+        m_ActiveOK.onClick.AddListener(delegate
+        {
+
+            Destroy(m_ActiveDialog);
+            m_ActiveDialog = null;
+            m_ActiveOK = null;
+            m_ActiveCancel = null;
+            whenOk();
+        });
+        m_ActiveCancel = buttons[1];
+        m_ActiveCancel.onClick.AddListener(delegate
+        {
+
+            Destroy(m_ActiveDialog);
+            m_ActiveDialog = null;
+            m_ActiveOK = null;
+            m_ActiveCancel = null;
+            whenCancel();
+        });
+        return true;
+    }
+
+    public void ClickOK()
+    {
+        if(m_ActiveOK != null)
+        {
+            m_ActiveOK.onClick.Invoke();
+        }
+    }
+
+    public void ClickCancel()
+    {
+        if(m_ActiveCancel != null)
+        {
+            m_ActiveCancel.onClick.Invoke();
+        }
+    }
+
+    public delegate void MsgCallback();
+
+    private UnityEngine.Object m_DialogCache;
+    private UnityEngine.Object m_MsgboxCache;
     // Start is called before the first frame update
     void Start()
     {
-        gameSceneManager = GameAssetsManager.instance;
+        m_DialogCache = Resources.Load("UI/Dialog");
+        m_MsgboxCache = Resources.Load("UI/Msgbox");
     }
 
     // Update is called once per frame
@@ -105,4 +157,5 @@ public class GameUIManager : Singleton<GameUIManager>
     {
         //GameObject.FindGameObjectWithTag("UIBundle");
     }
+
 }

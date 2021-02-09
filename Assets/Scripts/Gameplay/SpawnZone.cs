@@ -24,26 +24,26 @@ public class SpawnZone : MonoBehaviour
     
     
     [SerializeField]
-    SpawnZoneDelegate.Type areaType;
+    private SpawnZoneDelegate.Type m_AreaType;
     [SerializeField]
-    bool snapGround = false;
+    private bool m_SnapGround = false;
     [SerializeField]
-    bool onSurface = false;
+    private bool m_OnSurface = false;
     [SerializeField]
-    bool builtInfactory = false;
+    private bool m_BuiltInfactory = false;
     [SerializeField]
-    bool partialGeneration = true;
-    SpawnZoneDelegate.getRandomPointGenerator generator;
-    SpawnZoneDelegate.drawGizmo drawGizmo;
+    private bool m_PartialGeneration = true;
+    SpawnZoneDelegate.getRandomPointGenerator m_Generator;
+    SpawnZoneDelegate.drawGizmo m_DrawGizmo;
 
 
     [SerializeField]
-    private int spawnLimit = 20;
+    protected int m_SpawnLimit = 20;
 
     [SerializeField]
-    protected List<GameObject> products;
+    protected List<GameObject> g_Products;
 
-    private List<GameObject> active;
+    private List<GameObject> m_Active;
 
     private void Awake()
     {
@@ -52,36 +52,38 @@ public class SpawnZone : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        active = new List<GameObject>();
+        m_Active = new List<GameObject>();
+        CharacterManager.instance.AddUnitReference(this);
     }
 
     // Update is called once per frame
+    private int timer = 0; 
     void Update()
     {
-        Clearlist();
+        timer++;
+        if (timer > 60)
+        {
+            Clearlist();
+            timer = 0;
+        }
         if (CanGen())
         {
             
-            GenEntity();
+            GenEntity();//
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        
     }
 
     protected void InitArea()
     {
-        generator = SpawnZoneMethod.NewGenerator(areaType);
+        m_Generator = SpawnZoneMethod.NewGenerator(m_AreaType);
         //drawGizmo = SpawnZoneMethod.GetDrawType(areaType);
-        if (products == null) { products = new List<GameObject>(); }
+        if (g_Products == null) { g_Products = new List<GameObject>(); }
     }
 
     protected Vector3 Random3DPoint()
     {
-        Vector3 p = transform.TransformPoint(generator(onSurface));
-        if (snapGround)
+        Vector3 p = transform.TransformPoint(m_Generator(m_OnSurface));
+        if (m_SnapGround)
         {
             if (Physics.Raycast(transform.position, -Vector3.up,out RaycastHit hitInfo))
             {
@@ -92,27 +94,56 @@ public class SpawnZone : MonoBehaviour
         }
         return p;
     }
-    private void Clearlist()
+    protected virtual void Clearlist()
     {
-        active.RemoveAll(i => i == null);
+        m_Active.RemoveAll(i => i == null);
     } 
     protected virtual void GenEntity()
     {
-        AddToList(Instantiate(products[Random.Range(0, products.Count)], Random3DPoint(), new Quaternion()));
+        AddToList(Instantiate(g_Products[Random.Range(0, g_Products.Count)], Random3DPoint(), new Quaternion()));
+        
     }
 
     protected virtual void GenEntity(int i)
     {
-        AddToList(Instantiate(products[i % products.Count], Random3DPoint(), new Quaternion()));
+        AddToList(Instantiate(g_Products[i % g_Products.Count], Random3DPoint(), new Quaternion()));
     }
 
-    protected void AddToList(GameObject go)
+    protected virtual void AddToList(GameObject go)
     {
-        active.Add(go);
+        m_Active.Add(go);
     }
 
     protected virtual bool CanGen()
     {
-        return Random.Range(0, 30) > 27f && active.Count < spawnLimit;
+        if (autoGen)
+        {
+            return Random.Range(0, 30) > 27f && m_Active.Count < m_SpawnLimit;
+        }
+        else
+        {
+            if(Random.Range(0, 30) > 27f && m_Active.Count < m_SpawnLimit && requiredGenNum > 0)
+            {
+                requiredGenNum--;
+                return true;
+            }
+            return false;
+        }
+    }
+    [SerializeField]
+    protected bool autoGen = true;
+    public void SetAutoGen(bool set)
+    {
+        autoGen = set;
+    }
+    protected int requiredGenNum;
+    public virtual void Gen(int num)
+    {
+        requiredGenNum = num;
+    }
+
+    public virtual void GenBrust(int num)
+    {
+
     }
 }

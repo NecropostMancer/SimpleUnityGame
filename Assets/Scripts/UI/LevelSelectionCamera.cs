@@ -11,6 +11,8 @@ public class LevelSelectionCamera : MonoBehaviour
     private Vector3 lookat;
 
     private Camera thisCamera;
+    [SerializeField]
+    private GameObject m_InitWith;
     private Vector3 pivot;
 
     private Vector3 distence;
@@ -20,22 +22,38 @@ public class LevelSelectionCamera : MonoBehaviour
     void Start()
     {
         thisCamera = GetComponent<Camera>();
-        pivot = new Vector3(801f, 4.6f, 676.32f);
+        pivot = m_InitWith.transform.position;
         transform.LookAt(pivot);
         distence = transform.position - pivot;
         this.transform.parent = null;
     }
-
+    float m_PauseTime = 0;
+    Vector3 m_Temp;
     // Update is called once per frame
     void Update()
     {
-        transform.RotateAround(pivot, Vector3.up, 0.2f);
-        if ((pivot - transform.position).sqrMagnitude > 10000)
+        if (m_PauseTime < 0)
         {
-
+            transform.RotateAround(pivot, Vector3.up, Time.deltaTime);
+        }
+        else
+        {
+            m_PauseTime -= Time.deltaTime;
+        }
+        if (Input.GetMouseButton(1))
+        {
+            m_PauseTime = 3f;
+            transform.RotateAround(pivot, Vector3.up, Input.GetAxis("Mouse X") * 1.5f);
+            
         }
         
+        m_Temp = transform.position + transform.forward * Input.mouseScrollDelta.y * 3f;
+        if ((m_Temp - pivot).y > 3 && (m_Temp - pivot).y < 100)
+        {
+            transform.position = m_Temp;
+        }
     }
+
     private bool m_isSwitching = false;
     IEnumerator GoNewPivot(Vector3 camPos, Vector3 newPivot, Vector3 oldPivot)
     {
@@ -58,9 +76,14 @@ public class LevelSelectionCamera : MonoBehaviour
 
     public void Switch(Vector3 pos)
     {
-        if (m_isSwitching) return;
+        m_PauseTime = -1;
+        if (m_isSwitching) {
+            StopAllCoroutines();
+        }
+        
         m_isSwitching = true;
         StartCoroutine(GoNewPivot(transform.position, pos, pivot));
         pivot = pos;
+        
     }
 }

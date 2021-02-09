@@ -2,8 +2,12 @@
 
 public class Singleton<Instance> : MonoBehaviour where Instance : Singleton<Instance>
 {
+    
     public static Instance instance;
     public bool isPersistant;
+
+
+
 
     public virtual void Awake()
     {

@@ -18,9 +18,9 @@ TagManager:
   - 
   - Player1stView
   - Bullet
-  - attackAble
+  - Body
   - MovingObjectDetector
-  - 
+  - HitAble
   - 
   - 
   - 

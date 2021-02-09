@@ -9,25 +9,25 @@ public static class SpawnZoneMethod
         switch (type)
         {
             case SpawnZoneDelegate.Type.SPHERE:
-                return Type1;
+                return Sphere;
                 break;
             case SpawnZoneDelegate.Type.CIRCLE:
-                return Type2;
+                return Circle;
                 break;
             case SpawnZoneDelegate.Type.CUBE:
-                return Type3;
+                return Cube;
                 break;
             case SpawnZoneDelegate.Type.RECT:
-                return Type4;
+                return Rect;
                 break;
             default:
-                return Type1;
+                return Sphere;
                 break;
         }
     }
 
     //SPHERE
-    public static Vector3 Type1(bool onSurface)
+    public static Vector3 Sphere(bool onSurface)
     {
         if (onSurface)
         {
@@ -40,7 +40,7 @@ public static class SpawnZoneMethod
     }
 
     //CIRCLE
-    public static Vector3 Type2(bool onSurface)
+    public static Vector3 Circle(bool onSurface)
     {
         Vector2 rand;
         if (onSurface)
@@ -57,7 +57,7 @@ public static class SpawnZoneMethod
     }
 
     //CUBE
-    public static Vector3 Type3(bool onSurface)
+    public static Vector3 Cube(bool onSurface)
     {
         Vector3 p;
         p.x = Random.Range(-.5f, .5f);
@@ -71,7 +71,7 @@ public static class SpawnZoneMethod
     }
 
     //RECT
-    public static Vector3 Type4(bool onSurface)
+    public static Vector3 Rect(bool onSurface)
     {
         Vector3 p;
         p.x = Random.Range(-.5f, .5f);

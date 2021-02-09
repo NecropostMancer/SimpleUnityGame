@@ -7,32 +7,32 @@ public class Playable : MonoBehaviour
 {
     public virtual void Awake()
     {
-        if (battleManager == null)
+        if (characterManager == null)
         {
-            battleManager = BattleManager.instance;
+            characterManager = CharacterManager.instance;
         }
     }
 
 
-    private static BattleManager battleManager;
+    private static CharacterManager characterManager;
 
     protected void SendUICommand(UICommand cmd) {
-        
-        battleManager.SendUICommand(cmd);
+
+        //characterManager.SendUICommand(cmd);
     }
 
     protected void AddUnitReference(BaseEnemy baseEnemy)
     {
-        battleManager.AddUnitReference(baseEnemy);
+        characterManager.AddUnitReference(baseEnemy);
     }
 
     protected void RemoveUnitReference(BaseEnemy baseEnemy)
     {
-        battleManager.RemoveUnitReference(baseEnemy);
+        characterManager.RemoveUnitReference(baseEnemy);
     }
 
     protected void AddUnitReference(SpawnZone spawnZone)
     {
-        battleManager.AddUnitReference(spawnZone);
+        characterManager.AddUnitReference(spawnZone);
     }
 }

@@ -5,56 +5,52 @@ using UnityEngine.SceneManagement;
 
 public class GameAssetsManager : Singleton<GameAssetsManager>
 {
-    private float loadingProgress;
-    private string currentSceneName;
-    private bool isWorking;
+    private float m_LoadingProgress;
+    private string m_CurrentSceneName = "Bootstrap";
+    private string m_LastSceneName;
+    private int addParamA, addParamB;
+    private bool m_IsWorking;
 
     public delegate void callback();
 
-    private AsyncOperation opRef;
+    private AsyncOperation m_OpLoadingNewRef;
+    private AsyncOperation m_OpUnLoadingOldRef;
+    private AsyncOperation m_LoadingTransition;
+    private UIBundle m_Bundle;
 
-    private UIBundle bundle;
+    private ProfileData m_ProfileData;
     //正确运行依赖于场景的正确命名。
     //BattleScene[1-9]
     //MainMenu
     //LoadingScene
     //LevelSelection
     //Store
-    public void LoadSceneByName(string name,callback cb = null)
+    public void LoadSceneByName(string name,callback cb = null,int addtionalParamA = -1, int addtionalParamB = -1)
     {
-        currentSceneName = name;
-        opRef = SceneManager.LoadSceneAsync(currentSceneName); //watch out!
-        StartCoroutine(QueryProgress(cb));
-    }/*
-    public void LoadBattleScene(int level,callback cb = null)
-    {
-
-        currentSceneName = "BattleScene" + level.ToString();
         
-        opRef = SceneManager.LoadSceneAsync(currentSceneName); //watch out!
+        m_LastSceneName = m_CurrentSceneName;
+        m_CurrentSceneName = name;
+        
+        addParamA = addtionalParamA;
+        addParamB = addtionalParamB;
         StartCoroutine(QueryProgress(cb));
     }
-
-    public void LoadMainMenu(callback cb = null)
+    
+    public void LoadEndBattleScene()
     {
-        currentSceneName = "MainMenu";
-        opRef = SceneManager.LoadSceneAsync(currentSceneName); //watch out!
-        StartCoroutine(QueryProgress(cb));
+        if (LevelEnd.gm_CurrentInstance == null)
+        {
+            SceneManager.LoadSceneAsync("EndLevelAddtive", LoadSceneMode.Additive);
+        }
+    }
+    private bool m_enableFore = true;
+    private bool m_enablePost = true;
+    public void SetTransitionSetting(bool enableFore,bool enablePost)
+    {
+        m_enableFore = enableFore;
+        m_enablePost = enablePost;
     }
 
-    public void LoadSelection(callback cb = null)
-    {
-        currentSceneName = "LevelSelection";
-        opRef = SceneManager.LoadSceneAsync(currentSceneName); //watch out!
-        StartCoroutine(QueryProgress(cb));
-    }
-
-    public void LoadStore(callback cb = null)
-    {
-        currentSceneName = "Store";
-        opRef = SceneManager.LoadSceneAsync(currentSceneName); //watch out!
-        StartCoroutine(QueryProgress(cb));
-    }*/
     //加载界面有些动画需要控制，因此给它新派了一个类，
     //本着方便的原则，就干脆让sencemanager管理了。
     //目前所有其它的“正常”加载都是通过UI控制的，因此
@@ -67,46 +63,77 @@ public class GameAssetsManager : Singleton<GameAssetsManager>
     //UImanager的引用。
     //1/5:
     //UImanager 有啥用？删了算了。
+    //1/20:回来了！
+    //许多的return null是控制加载和卸载帧的
+    //目前的问题是加载新场景后会有一两帧会有两个audiolistener，不知道怎么办。
     IEnumerator QueryProgress(callback cb = null)
     {
         LoadingSceneActive();
-        LoadingControl loadingControl;
-        while (true)
+        m_LoadingProgress = 0f;
+        while (!m_LoadingTransition.isDone)
         {
-            loadingControl = FindObjectOfType<LoadingControl>();
-            if(loadingControl != null)
+            yield return null;
+        }
+        yield return null;
+        LoadingControl.sm_currentInstance.SetSetting(m_enableFore,m_enablePost);
+        LoadingControl.sm_currentInstance.StartFadeIn();
+        while(m_OpLoadingNewRef == null)
+        {
+            yield return null;
+        }
+        if(m_OpUnLoadingOldRef != null)
+        {
+            while (!m_OpUnLoadingOldRef.isDone)
             {
-                break;
+                m_LoadingProgress = m_OpUnLoadingOldRef.progress * 0.3f;
+                LoadingControl.sm_currentInstance.SetProgress(m_LoadingProgress);
+                yield return null;
             }
-            yield return null;
         }
-        loadingProgress = 0f;
-        while (!opRef.isDone)
+        m_OpLoadingNewRef.allowSceneActivation = true;
+        yield return null;// 下一帧再载入备用的listener
+        LoadingControl.sm_currentInstance.SetAudioListenerActive(true);
+        while (!m_OpLoadingNewRef.isDone)
         {
-            loadingProgress = opRef.progress;
-            loadingControl.SetProgress(loadingProgress);
+            m_LoadingProgress = 0.3f + m_OpLoadingNewRef.progress * 0.5f;
+            LoadingControl.sm_currentInstance.SetProgress(m_LoadingProgress);
             yield return null;
         }
-        loadingProgress = 1f;
-        isWorking = false;
-        opRef = null;
+
+        LoadingControl.sm_currentInstance.SetAudioListenerActive(false);
+        
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(m_CurrentSceneName));
+        
+        
+        m_LoadingProgress = 1f;
+        LoadingControl.sm_currentInstance.SetProgress(1.1f);
+        m_IsWorking = false;
+        m_OpLoadingNewRef = null;
         //and load more non-editor assets...
-        loadingControl.StartFadeOut(this);
-        //LoadingSceneDisable();
+        
+        if(m_CurrentSceneName[0] == 'B') { BattleManager.instance.StartBattle(addParamA,addParamB); }
         cb?.Invoke();
     }
 
 
     private void LoadingSceneActive()
     {
-        SceneManager.LoadScene("LoadingScene",LoadSceneMode.Additive);
-        //怎么“合理”地搞定这些相互引用?
+        m_LoadingTransition = SceneManager.LoadSceneAsync("LoadingScene",LoadSceneMode.Additive);
+        
 
     }
+
+    private bool firstGame = true;
 
     private void LoadingSceneDisable()
     {
         SceneManager.UnloadSceneAsync("LoadingScene");
+        m_LoadingTransition = null;
+        if(firstGame && m_CurrentSceneName[0] == 'L')
+        {
+            GameUIManager.instance.CallMsgbox("Only Level 1 is playable.", null, "Fine.");
+            firstGame = false;
+        }
     }
 
     //给loadingScene用的，懒得补回调。
@@ -114,10 +141,115 @@ public class GameAssetsManager : Singleton<GameAssetsManager>
     {
         LoadingSceneDisable();
     }
+
+    public bool IsBusy()
+    {
+        return m_LoadingTransition != null; 
+    }
+
+    public void RequesetLoadingStart()
+    {
+        if(m_LastSceneName != null)
+        {
+            m_OpUnLoadingOldRef = SceneManager.UnloadSceneAsync(m_LastSceneName); //ok?
+        }
+        
+        m_OpLoadingNewRef = SceneManager.LoadSceneAsync(m_CurrentSceneName,LoadSceneMode.Additive); //watch out!
+        m_OpLoadingNewRef.allowSceneActivation = false;
+    }
     
+    public bool IsSaveVaild()
+    {
+        try
+        {
+            AssetsLoadSystem.LoadSave(0);
+        }
+        catch
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public ProfileData LoadSave()
+    {
+        try
+        {
+            m_ProfileData = AssetsLoadSystem.LoadSave(0);
+        }
+        catch
+        {
+
+        }
+        m_ProfileData.unlockedWeapon[0] = true;
+        return m_ProfileData;
+    }
+    public ProfileData GetSave()
+    {
+        return m_ProfileData;
+    }
+    public void UpdateSave()
+    {
+        AssetsLoadSystem.UpdateSave(0,m_ProfileData);
+    }
+    public void NewSave()
+    {
+        m_ProfileData = new ProfileData();
+        ProfileData.ResetProfile(m_ProfileData);
+    }
+    private GameSetting m_GameSettingData;
+    public bool IsSettingVaild()
+    {
+        try
+        {
+            AssetsLoadSystem.LoadSetting();
+        }
+        catch
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public GameSetting LoadSetting()
+    {
+        try
+        {
+            m_GameSettingData = AssetsLoadSystem.LoadSetting();
+        }
+        catch
+        {
+
+        }
+        
+        return m_GameSettingData;
+    }
+    public GameSetting GetSetting()
+    {
+        return m_GameSettingData;
+    }
+    public void UpdateSetting()
+    {
+        AssetsLoadSystem.UpdateSetting(m_GameSettingData);
+    }
+    public void NewSetting()
+    {
+        m_GameSettingData = new GameSetting();
+        GameSetting.ResetAll(m_GameSettingData);
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
+        if (IsSettingVaild())
+        {
+            LoadSetting();
+        }
+        else
+        {
+            NewSetting();
+        }
         
     }
 
